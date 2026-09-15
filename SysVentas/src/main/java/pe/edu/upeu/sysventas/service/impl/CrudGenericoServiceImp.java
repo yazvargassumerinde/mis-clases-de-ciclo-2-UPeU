@@ -26,7 +26,6 @@ public abstract class CrudGenericoServiceImp<T, ID> implements ICrudGenericoServ
     public List<T> finAll() {
         return getRepo().findAll();
     }
-
     @Override
     public T findById(ID id) {
         return getRepo().findById(id).orElseThrow(()->new ModelNotFoundException("ID no existe :"+id));
