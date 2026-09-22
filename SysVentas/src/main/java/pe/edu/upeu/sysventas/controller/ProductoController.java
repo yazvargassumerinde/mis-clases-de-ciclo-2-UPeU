@@ -96,7 +96,7 @@ public class ProductoController {
     public void listar() {
         try {
             tableView.getItems().clear();
-            listarProducto = FXCollections.observableArrayList (ps.findAll());
+            listarProducto = FXCollections.observableArrayList (ps.finAll());
             tableView.getItems().addAll(listarProducto);
             //txtFiltroDato.textProperty().addListener((obs, o, n) -> filtrarProductos(n));
         } catch (Exception e) {

@@ -56,8 +56,7 @@
                                     <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="18.0" prefWidth="104.0" text="Formulario de registro" GridPane.columnSpan="2147483647" />
                                     <Label prefHeight="18.0" prefWidth="82.0" text="Tipo Producto" GridPane.rowIndex="1" />
                                     <ComboBox fx:id="cbxTipoProducto" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="134.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
-                                    <TextField fx:id="txtNombreProducto" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
-                                    <Label fx:id="txtPUnit" maxWidth="1.7976931348623157E308" prefHeight="18.0" prefWidth="88.0" text="Nombre Producto" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
+                                    <TextField fx:id="txtNombreProducto" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" /><Label maxWidth="1.7976931348623157E308" prefHeight="18.0" prefWidth="88.0" text="Nombre Producto" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
                                     <Label prefHeight="18.0" prefWidth="108.0" text="P. Unid" GridPane.rowIndex="3" />
                                     <TextField fx:id="txtPUnit" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                     <Label prefHeight="18.0" prefWidth="81.0" text="P. Unid Old" GridPane.columnIndex="2" GridPane.rowIndex="3" />
@@ -69,10 +68,10 @@
                                     <Label prefHeight="18.0" prefWidth="96.0" text="Stock Old" GridPane.columnIndex="2" GridPane.rowIndex="5" />
                                     <TextField fx:id="txtStockOld" GridPane.columnIndex="3" GridPane.rowIndex="5" />
                                     <Label prefHeight="18.0" prefWidth="76.0" text="Categoria" GridPane.rowIndex="6" />
-                                    <ComboBox fx:id="cbxMarca" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="6" />
+                                    <ComboBox fx:id="cbxCategoria" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="6" />
                                     <Label prefHeight="18.0" prefWidth="86.0" text="Marca" GridPane.rowIndex="7" />
                                     <Label maxWidth="1.7976931348623157E308" prefHeight="18.0" prefWidth="78.0" text="Unidad Medida" GridPane.columnSpan="2147483647" GridPane.rowIndex="8" />
-                                    <ComboBox fx:id="cbxCategoria" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="7" />
+                                    <ComboBox fx:id="cbxMarca" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="7" />
                                     <ComboBox fx:id="cbxUnidMedida" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="8" />
                                     <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Guardar" GridPane.columnIndex="1" GridPane.rowIndex="9">
                                        <GridPane.margin>
