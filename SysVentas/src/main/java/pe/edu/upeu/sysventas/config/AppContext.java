@@ -38,6 +38,7 @@ public class AppContext {
         registrar(MarcaRepository.class, new MarcaRepository());
         registrar(UnidadMedidaRepository.class, new UnidadMedidaRepository());
         registrar(ProductoRepository.class, new ProductoRepository());
+        registrar(ClienteRepository.class, new ClienteRepository());
 
     }
 
@@ -50,6 +51,7 @@ public class AppContext {
         registrar(IMarcaService.class, new MarcaServiceImp(getBean(MarcaRepository.class)));
         registrar(IProductoService.class, new ProductoServiceImp(getBean(ProductoRepository.class)));
         registrar(IUnidadMedidaService.class, new UnidadMedidaServiceImp(getBean(UnidadMedidaRepository.class)));
+        registrar(IClienteService.class, new ClienteServiceImp(getBean(ClienteRepository.class)));
 
 
     }
@@ -67,6 +69,9 @@ public class AppContext {
                         getBean(ICategoriasService.class),
                         getBean(IProductoService.class),
                         getBean(IUnidadMedidaService.class)));
+
+        registrar(ClienteController.class,
+                new ClienteController(getBean(IClienteService.class)));
 
     }
 
