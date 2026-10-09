@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="miContenedor" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pe.edu.upeu.sysventas.controller.ProductoController">
+<AnchorPane fx:id="miContenedor" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pe.edu.upeu.coolbox.controller.ProductoController">
    <children>
       <VBox layoutX="7.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
       <AnchorPane layoutX="171.0" />
