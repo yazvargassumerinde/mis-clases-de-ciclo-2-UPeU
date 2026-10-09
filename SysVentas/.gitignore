@@ -37,3 +37,5 @@ build/
 
 ### Mac OS ###
 .DS_Store
+### Base de datos H2 local ###
+data/
