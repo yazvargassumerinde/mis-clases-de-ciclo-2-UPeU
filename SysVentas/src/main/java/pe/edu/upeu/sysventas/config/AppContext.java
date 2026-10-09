@@ -7,7 +7,10 @@ import pe.edu.upeu.sysventas.service.impl.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AppContext {
+public class
+
+
+AppContext {
 
     // Singleton: una sola instancia en toda la app
     private static AppContext instance;
@@ -61,6 +64,7 @@ public class AppContext {
     // El FXMLLoader los busca aquí a través de setControllerFactory().
     private void registrarControladores() {
         //registrar(LoginController.class, new LoginController(getBean(IUsuarioService.class)));
+        registrar(LoginController.class, new LoginController());
         registrar(MainGuiController.class,new MainGuiController());
 
         registrar(ProductoController.class,
