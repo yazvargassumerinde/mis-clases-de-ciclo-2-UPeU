@@ -18,7 +18,7 @@ public class SysVentas extends Application {
         AppContext appContext= AppContext.getInstance();
         FXMLLoader fxmlLoader = new FXMLLoader(SysVentas.class.getResource("/view/login.fxml"));
         fxmlLoader.setControllerFactory(appContext::getBean);
-        Scene scene = new Scene(fxmlLoader.load(),rectangle2D.getWidth(),rectangle2D.getHeight()-50);
+        Scene scene = new Scene(fxmlLoader.load());
         scene.getStylesheets().add(SysVentas.class.getResource("/css/style.css").toExternalForm());
         stage.setTitle("SysVentas");
         stage.setScene(scene);

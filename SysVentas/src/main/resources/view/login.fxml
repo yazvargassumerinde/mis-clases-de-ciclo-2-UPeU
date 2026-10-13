@@ -51,7 +51,7 @@
                         <AnchorPane style="-fx-border-radius: 3; -fx-border-color: #b5abd1;" GridPane.columnSpan="2147483647">
                             <children>
                                 <Label layoutX="74.0" layoutY="6.0" text="Usuario" />
-                                <TextField layoutX="151.0" layoutY="4.0" />
+                                <TextField fx:id="txtUsuario" layoutX="151.0" layoutY="4.0" />
                             </children>
                             <GridPane.margin>
                                 <Insets left="5.0" right="5.0" />
@@ -60,7 +60,7 @@
                         <AnchorPane style="-fx-background-radius: 3; -fx-border-color: #b5abd1;" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                             <children>
                                 <Label layoutX="74.0" layoutY="8.0" text="Clave" />
-                                <PasswordField layoutX="151.0" layoutY="3.0" prefHeight="22.0" prefWidth="148.0">
+                                <PasswordField fx:id="txtClave" layoutX="151.0" layoutY="3.0" prefHeight="22.0" prefWidth="148.0">
                                     <padding>
                                         <Insets bottom="5.0" />
                                     </padding>
@@ -86,7 +86,7 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Ingresar">
+                                <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#login" text="Ingresar">
                                     <GridPane.margin>
                                         <Insets right="5.0" />
                                     </GridPane.margin>

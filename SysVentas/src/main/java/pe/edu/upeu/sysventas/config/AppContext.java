@@ -7,10 +7,7 @@ import pe.edu.upeu.sysventas.service.impl.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class
-
-
-AppContext {
+public class AppContext {
 
     // Singleton: una sola instancia en toda la app
     private static AppContext instance;
@@ -43,6 +40,8 @@ AppContext {
         registrar(ProductoRepository.class, new ProductoRepository());
         registrar(ClienteRepository.class, new ClienteRepository());
 
+        registrar(UsuarioRepository.class, new UsuarioRepository());
+
     }
 
     // CAPA 2 — SERVICIOS
@@ -56,6 +55,8 @@ AppContext {
         registrar(IUnidadMedidaService.class, new UnidadMedidaServiceImp(getBean(UnidadMedidaRepository.class)));
         registrar(IClienteService.class, new ClienteServiceImp(getBean(ClienteRepository.class)));
 
+        registrar(IUsuarioService.class, new UsuarioServiceImp(getBean(UsuarioRepository.class)));
+
 
     }
 
@@ -64,7 +65,7 @@ AppContext {
     // El FXMLLoader los busca aquí a través de setControllerFactory().
     private void registrarControladores() {
         //registrar(LoginController.class, new LoginController(getBean(IUsuarioService.class)));
-        registrar(LoginController.class, new LoginController());
+        registrar(LoginController.class, new LoginController(getBean(IUsuarioService.class)));
         registrar(MainGuiController.class,new MainGuiController());
 
         registrar(ProductoController.class,
@@ -76,6 +77,8 @@ AppContext {
 
         registrar(ClienteController.class,
                 new ClienteController(getBean(IClienteService.class)));
+
+        registrar(LoginController.class, new LoginController(getBean(IUsuarioService.class)));
 
     }
 
