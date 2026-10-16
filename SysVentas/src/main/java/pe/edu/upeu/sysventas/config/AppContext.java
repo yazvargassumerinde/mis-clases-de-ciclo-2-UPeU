@@ -56,7 +56,7 @@ public class AppContext {
         registrar(IClienteService.class, new ClienteServiceImp(getBean(ClienteRepository.class)));
 
         registrar(IUsuarioService.class, new UsuarioServiceImp(getBean(UsuarioRepository.class)));
-
+        registrar(IMenuMenuItemDao.class, new MenuMenuItemDaoImp());
 
     }
 
@@ -66,7 +66,7 @@ public class AppContext {
     private void registrarControladores() {
         //registrar(LoginController.class, new LoginController(getBean(IUsuarioService.class)));
         registrar(LoginController.class, new LoginController(getBean(IUsuarioService.class)));
-        registrar(MainGuiController.class,new MainGuiController());
+        registrar(MainGuiController.class,new MainGuiController(getBean(IMenuMenuItemDao.class)));
 
         registrar(ProductoController.class,
                 new ProductoController(
