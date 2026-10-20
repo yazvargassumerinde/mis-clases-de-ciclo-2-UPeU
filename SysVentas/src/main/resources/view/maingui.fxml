@@ -3,15 +3,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="bp" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pe.edu.upeu.sysventas.controller.MainGuiController">
-   <children>
-      <MenuBar fx:id="menuBar" layoutX="-16.0" layoutY="2.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="2.0">
+<BorderPane  fx:id="bp"  prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pe.edu.upeu.sysventas.controller.MainGuiController">
+   <top>
+      <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-                <MenuItem fx:id="menuItem1" mnemonicParsing="false" text="Producto" />
-                <MenuItem fx:id="menuItem3" mnemonicParsing="false" text="Cliente" />
-              <MenuItem fx:id="menuItem2" mnemonicParsing="false" text="Close" />
+                    <MenuItem fx:id="menuItem1" mnemonicParsing="false" text="Producto" />
+                    <MenuItem fx:id="menuItem2" mnemonicParsing="false" text="Close" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
@@ -26,10 +25,12 @@
           </Menu>
         </menus>
       </MenuBar>
-      <TabPane fx:id="tabPane" layoutY="27.0" prefHeight="370.0" prefWidth="594.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="27.0">
+   </top>
+   <center>
+      <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
-          <Tab text="Untitled Tab 1" />
+          <Tab text="Principal" />
         </tabs>
       </TabPane>
-   </children>
-</AnchorPane>
+   </center>
+</BorderPane>

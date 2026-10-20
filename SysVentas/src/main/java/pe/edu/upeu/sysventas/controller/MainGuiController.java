@@ -32,7 +32,7 @@ public class MainGuiController {
     @FXML
     TabPane tabPane;
     @FXML
-    MenuItem menuItem1, menuItem2, menuItem3;
+    MenuItem menuItem1, menuItem2;
 
     @FXML
     BorderPane bp;
