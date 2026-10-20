@@ -45,7 +45,6 @@ public class AppContext {
 
         registrar(UsuarioRepository.class, new UsuarioRepository());
 
-        registrar(ClienteRepository.class, new ClienteRepository());
         registrar(VentCarritoRepository.class, new VentCarritoRepository());
         registrar(VentaDetalleRepository.class, new VentaDetalleRepository());
         registrar(VentaRepository.class, new VentaRepository());
@@ -68,10 +67,9 @@ public class AppContext {
 
         registrar(ConsultaDNI.class, new ConsultaDNI());
         DataSource ds = DatabaseConfig.getDataSource();
-        registrar(IClienteService.class, new ClienteServiceImp( getBean(ClienteRepository.class)));
         registrar(IVentaCarritoService.class, new VentaCarritoServiceImp(getBean(VentCarritoRepository.class)));
         registrar(IVentaDetalleService.class, new VentaDetalleServiceImp(getBean(VentaDetalleRepository.class)));
-        registrar(IVentaService.class, new VentaServiceImp( getBean(VentaRepository.class), ds))
+        registrar(IVentaService.class, new VentaServiceImp(getBean(VentaRepository.class), ds));
 
     }
 
@@ -93,7 +91,6 @@ public class AppContext {
         registrar(ClienteController.class,
                 new ClienteController(getBean(IClienteService.class)));
 
-        registrar(LoginController.class, new LoginController(getBean(IUsuarioService.class)));
         registrar(VentaController.class, new VentaController());
 
     }
