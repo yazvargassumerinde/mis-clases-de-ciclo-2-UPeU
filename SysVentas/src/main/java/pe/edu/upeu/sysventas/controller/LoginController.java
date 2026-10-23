@@ -13,6 +13,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import pe.edu.upeu.sysventas.SysVentas;
+import pe.edu.upeu.sysventas.components.StageManager;
 import pe.edu.upeu.sysventas.components.Toast;
 import pe.edu.upeu.sysventas.config.AppContext;
 import pe.edu.upeu.sysventas.config.DatabaseConfig;
@@ -69,6 +70,7 @@ public class LoginController {
             Scene scene = new Scene(fxmlLoader.load(),rectangle2D.getWidth(),rectangle2D.getHeight());
             scene.getStylesheets().add(SysVentas.class.getResource("/css/style.css").toExternalForm());
             Stage stage = (Stage) ((Node)e.getSource()).getScene().getWindow();
+            StageManager.setPrimaryStage(stage);
             stage.setTitle("Hello!");
             stage.setScene(scene);
             stage.setResizable(true);

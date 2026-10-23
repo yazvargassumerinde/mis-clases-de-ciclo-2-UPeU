@@ -91,7 +91,15 @@ public class AppContext {
         registrar(ClienteController.class,
                 new ClienteController(getBean(IClienteService.class)));
 
-        registrar(VentaController.class, new VentaController());
+        registrar(VentaController.class,
+                new VentaController(
+                        getBean(IProductoService.class),
+                        getBean(IClienteService.class),
+                        getBean(IVentaCarritoService.class),
+                        getBean(IUsuarioService.class),
+                        getBean(IVentaService.class),
+                        getBean(IVentaDetalleService.class),
+                        getBean(ConsultaDNI.class)));
 
     }
 

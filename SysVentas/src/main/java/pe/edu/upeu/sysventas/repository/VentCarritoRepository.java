@@ -50,7 +50,7 @@ public class VentCarritoRepository extends AbstractJpaRepository<VentCarrito, Lo
                 "INSERT INTO vent_carrito(dniruc,id_producto,nombre_producto,cantidad,punitario,ptotal,estado,id_usuario,tipo_producto) VALUES(?,?,?,?,?,?,?,?,?)",
                 e.getDniruc(),e.getIdProducto().getIdProducto(),e.getNombreProducto(),
                 e.getCantidad(),e.getPunitario(),e.getPtotal(),e.getEstado(),
-                e.getIdUsuario().getIdUsuario(), e.getIdProducto().getTipoProducto().name() );
+                e.getIdUsuario().getIdUsuario(), e.getTipoProducto().name() );
         e.setIdCarrito(id); return e;
     }
     @Override
