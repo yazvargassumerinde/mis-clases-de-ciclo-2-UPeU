@@ -51,10 +51,10 @@ public class VentaServiceImp extends CrudGenericoServiceImp<Venta, Long>
     @Override
     public Comprobante generarComprobante(Venta venta){
         Comprobante b = new Comprobante();
-        b.setRucEmisor("10436319172");
-        b.setRazonSocial("SysCenterLife S.A.C.");
-        b.setDireccion("Av. La Torre  - Juliaca");
-        b.setUbigeo("Puno, Juliaca, Cercado");
+        b.setRucEmisor("20123456789");
+        b.setRazonSocial("Coolbox Juliaca");
+        b.setDireccion("Jr. San Roman 123 - Juliaca");
+        b.setUbigeo("Puno, San Roman, Juliaca");
         b.setTelefono("951782520");
 
         b.setTipoDocumento("BOLETA DE VENTA ELECTRÓNICA");
@@ -66,7 +66,7 @@ public class VentaServiceImp extends CrudGenericoServiceImp<Venta, Long>
         b.setTipoDocCliente(venta.getDniruc().getTipoDocumento().name());
         b.setNroDocCliente(venta.getDniruc().getDniruc());
         b.setNombreCliente(venta.getDniruc().getNombres());
-        b.setDireccionCliente("Av. Sangalli 1234");
+        b.setDireccionCliente(venta.getDniruc().getDireccion() != null ? venta.getDniruc().getDireccion() : "-");
 
         List<ItemComprobante> items = new ArrayList<>();
 

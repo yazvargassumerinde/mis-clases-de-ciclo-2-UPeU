@@ -183,3 +183,54 @@ MERGE INTO promocion (nombre, descripcion, porcentaje, fecha_inicio, fecha_fin, 
     ('Navidad', 'Descuento navideno en toda la tienda', 15, DATE '2026-12-01', DATE '2026-12-25', 'ACTIVO'),
     ('Cyber Wow', 'Ofertas en audifonos y parlantes', 20, DATE '2026-11-15', DATE '2026-11-18', 'ACTIVO'),
     ('Dia de la Madre', 'Descuento en electrodomesticos', 10, DATE '2027-05-01', DATE '2027-05-10', 'INACTIVO');
+
+-- Contadores Los contadores de ID continuan despues del ultimo registro
+--    (evita el error 'Unique index or primary key violation' al registrar desde el programa)
+ALTER TABLE perfil ALTER COLUMN id_perfil RESTART WITH (SELECT COALESCE(MAX(id_perfil), 0) + 1 FROM perfil);
+ALTER TABLE usuario ALTER COLUMN id_usuario RESTART WITH (SELECT COALESCE(MAX(id_usuario), 0) + 1 FROM usuario);
+ALTER TABLE categoria ALTER COLUMN id_categoria RESTART WITH (SELECT COALESCE(MAX(id_categoria), 0) + 1 FROM categoria);
+ALTER TABLE marca ALTER COLUMN id_marca RESTART WITH (SELECT COALESCE(MAX(id_marca), 0) + 1 FROM marca);
+ALTER TABLE unid_medida ALTER COLUMN id_unidad RESTART WITH (SELECT COALESCE(MAX(id_unidad), 0) + 1 FROM unid_medida);
+ALTER TABLE producto ALTER COLUMN id_producto RESTART WITH (SELECT COALESCE(MAX(id_producto), 0) + 1 FROM producto);
+ALTER TABLE emisor ALTER COLUMN id_emisor RESTART WITH (SELECT COALESCE(MAX(id_emisor), 0) + 1 FROM emisor);
+ALTER TABLE promocion ALTER COLUMN id_promocion RESTART WITH (SELECT COALESCE(MAX(id_promocion), 0) + 1 FROM promocion);
+
+-- Categorias, marcas y unidades de una tienda de tecnologia
+INSERT INTO categoria (nombre) SELECT 'Televisor' WHERE NOT EXISTS (SELECT 1 FROM categoria WHERE nombre = 'Televisor');
+INSERT INTO categoria (nombre) SELECT 'Audio' WHERE NOT EXISTS (SELECT 1 FROM categoria WHERE nombre = 'Audio');
+INSERT INTO categoria (nombre) SELECT 'Electrodomesticos' WHERE NOT EXISTS (SELECT 1 FROM categoria WHERE nombre = 'Electrodomesticos');
+INSERT INTO categoria (nombre) SELECT 'Accesorios' WHERE NOT EXISTS (SELECT 1 FROM categoria WHERE nombre = 'Accesorios');
+INSERT INTO categoria (nombre) SELECT 'Celulares' WHERE NOT EXISTS (SELECT 1 FROM categoria WHERE nombre = 'Celulares');
+INSERT INTO categoria (nombre) SELECT 'Computo' WHERE NOT EXISTS (SELECT 1 FROM categoria WHERE nombre = 'Computo');
+INSERT INTO marca (nombre) SELECT 'LG' WHERE NOT EXISTS (SELECT 1 FROM marca WHERE nombre = 'LG');
+INSERT INTO marca (nombre) SELECT 'JBL' WHERE NOT EXISTS (SELECT 1 FROM marca WHERE nombre = 'JBL');
+INSERT INTO marca (nombre) SELECT 'Sony' WHERE NOT EXISTS (SELECT 1 FROM marca WHERE nombre = 'Sony');
+INSERT INTO marca (nombre) SELECT 'Samsung' WHERE NOT EXISTS (SELECT 1 FROM marca WHERE nombre = 'Samsung');
+INSERT INTO marca (nombre) SELECT 'Xiaomi' WHERE NOT EXISTS (SELECT 1 FROM marca WHERE nombre = 'Xiaomi');
+INSERT INTO marca (nombre) SELECT 'Oster' WHERE NOT EXISTS (SELECT 1 FROM marca WHERE nombre = 'Oster');
+INSERT INTO marca (nombre) SELECT 'Philips' WHERE NOT EXISTS (SELECT 1 FROM marca WHERE nombre = 'Philips');
+INSERT INTO marca (nombre) SELECT 'Logitech' WHERE NOT EXISTS (SELECT 1 FROM marca WHERE nombre = 'Logitech');
+INSERT INTO unid_medida (nombre_medida) SELECT 'Unidad' WHERE NOT EXISTS (SELECT 1 FROM unid_medida WHERE nombre_medida = 'Unidad');
+INSERT INTO unid_medida (nombre_medida) SELECT 'Caja' WHERE NOT EXISTS (SELECT 1 FROM unid_medida WHERE nombre_medida = 'Caja');
+INSERT INTO unid_medida (nombre_medida) SELECT 'Paquete' WHERE NOT EXISTS (SELECT 1 FROM unid_medida WHERE nombre_medida = 'Paquete');
+
+-- Productos de ejemplo (solo se agregan si no existen; no cambian tu stock)
+INSERT INTO producto (nombre, pu, puold, utilidad, stock, stockold, id_categoria, id_marca, id_unidad, tipo_producto) SELECT 'Televisor LG 55 pulgadas 4K', 2199, 2199, 450, 10, 10, (SELECT MIN(id_categoria) FROM categoria WHERE nombre = 'Televisor'), (SELECT MIN(id_marca) FROM marca WHERE nombre = 'LG'), (SELECT MIN(id_unidad) FROM unid_medida WHERE nombre_medida = 'Unidad'), 'PRODUCTO' WHERE NOT EXISTS (SELECT 1 FROM producto WHERE nombre = 'Televisor LG 55 pulgadas 4K');
+INSERT INTO producto (nombre, pu, puold, utilidad, stock, stockold, id_categoria, id_marca, id_unidad, tipo_producto) SELECT 'Televisor Samsung 43 pulgadas', 1499, 1499, 300, 8, 8, (SELECT MIN(id_categoria) FROM categoria WHERE nombre = 'Televisor'), (SELECT MIN(id_marca) FROM marca WHERE nombre = 'Samsung'), (SELECT MIN(id_unidad) FROM unid_medida WHERE nombre_medida = 'Unidad'), 'PRODUCTO' WHERE NOT EXISTS (SELECT 1 FROM producto WHERE nombre = 'Televisor Samsung 43 pulgadas');
+INSERT INTO producto (nombre, pu, puold, utilidad, stock, stockold, id_categoria, id_marca, id_unidad, tipo_producto) SELECT 'Parlante JBL Flip 6', 499, 499, 120, 15, 15, (SELECT MIN(id_categoria) FROM categoria WHERE nombre = 'Audio'), (SELECT MIN(id_marca) FROM marca WHERE nombre = 'JBL'), (SELECT MIN(id_unidad) FROM unid_medida WHERE nombre_medida = 'Unidad'), 'PRODUCTO' WHERE NOT EXISTS (SELECT 1 FROM producto WHERE nombre = 'Parlante JBL Flip 6');
+INSERT INTO producto (nombre, pu, puold, utilidad, stock, stockold, id_categoria, id_marca, id_unidad, tipo_producto) SELECT 'Audifonos Sony WH-CH520', 229, 229, 60, 20, 20, (SELECT MIN(id_categoria) FROM categoria WHERE nombre = 'Audio'), (SELECT MIN(id_marca) FROM marca WHERE nombre = 'Sony'), (SELECT MIN(id_unidad) FROM unid_medida WHERE nombre_medida = 'Unidad'), 'PRODUCTO' WHERE NOT EXISTS (SELECT 1 FROM producto WHERE nombre = 'Audifonos Sony WH-CH520');
+INSERT INTO producto (nombre, pu, puold, utilidad, stock, stockold, id_categoria, id_marca, id_unidad, tipo_producto) SELECT 'Audifonos Xiaomi Redmi Buds 4', 129, 129, 35, 25, 25, (SELECT MIN(id_categoria) FROM categoria WHERE nombre = 'Audio'), (SELECT MIN(id_marca) FROM marca WHERE nombre = 'Xiaomi'), (SELECT MIN(id_unidad) FROM unid_medida WHERE nombre_medida = 'Unidad'), 'PRODUCTO' WHERE NOT EXISTS (SELECT 1 FROM producto WHERE nombre = 'Audifonos Xiaomi Redmi Buds 4');
+INSERT INTO producto (nombre, pu, puold, utilidad, stock, stockold, id_categoria, id_marca, id_unidad, tipo_producto) SELECT 'Tetera electrica Oster 1.7 L', 119, 119, 30, 12, 12, (SELECT MIN(id_categoria) FROM categoria WHERE nombre = 'Electrodomesticos'), (SELECT MIN(id_marca) FROM marca WHERE nombre = 'Oster'), (SELECT MIN(id_unidad) FROM unid_medida WHERE nombre_medida = 'Unidad'), 'PRODUCTO' WHERE NOT EXISTS (SELECT 1 FROM producto WHERE nombre = 'Tetera electrica Oster 1.7 L');
+INSERT INTO producto (nombre, pu, puold, utilidad, stock, stockold, id_categoria, id_marca, id_unidad, tipo_producto) SELECT 'Licuadora Oster 600 W', 249, 249, 60, 10, 10, (SELECT MIN(id_categoria) FROM categoria WHERE nombre = 'Electrodomesticos'), (SELECT MIN(id_marca) FROM marca WHERE nombre = 'Oster'), (SELECT MIN(id_unidad) FROM unid_medida WHERE nombre_medida = 'Unidad'), 'PRODUCTO' WHERE NOT EXISTS (SELECT 1 FROM producto WHERE nombre = 'Licuadora Oster 600 W');
+INSERT INTO producto (nombre, pu, puold, utilidad, stock, stockold, id_categoria, id_marca, id_unidad, tipo_producto) SELECT 'Hervidor Philips 1.5 L', 139, 139, 35, 10, 10, (SELECT MIN(id_categoria) FROM categoria WHERE nombre = 'Electrodomesticos'), (SELECT MIN(id_marca) FROM marca WHERE nombre = 'Philips'), (SELECT MIN(id_unidad) FROM unid_medida WHERE nombre_medida = 'Unidad'), 'PRODUCTO' WHERE NOT EXISTS (SELECT 1 FROM producto WHERE nombre = 'Hervidor Philips 1.5 L');
+INSERT INTO producto (nombre, pu, puold, utilidad, stock, stockold, id_categoria, id_marca, id_unidad, tipo_producto) SELECT 'Celular Xiaomi Redmi Note 13', 899, 899, 180, 10, 10, (SELECT MIN(id_categoria) FROM categoria WHERE nombre = 'Celulares'), (SELECT MIN(id_marca) FROM marca WHERE nombre = 'Xiaomi'), (SELECT MIN(id_unidad) FROM unid_medida WHERE nombre_medida = 'Unidad'), 'PRODUCTO' WHERE NOT EXISTS (SELECT 1 FROM producto WHERE nombre = 'Celular Xiaomi Redmi Note 13');
+INSERT INTO producto (nombre, pu, puold, utilidad, stock, stockold, id_categoria, id_marca, id_unidad, tipo_producto) SELECT 'Mouse inalambrico Logitech M170', 49, 49, 15, 30, 30, (SELECT MIN(id_categoria) FROM categoria WHERE nombre = 'Computo'), (SELECT MIN(id_marca) FROM marca WHERE nombre = 'Logitech'), (SELECT MIN(id_unidad) FROM unid_medida WHERE nombre_medida = 'Unidad'), 'PRODUCTO' WHERE NOT EXISTS (SELECT 1 FROM producto WHERE nombre = 'Mouse inalambrico Logitech M170');
+INSERT INTO producto (nombre, pu, puold, utilidad, stock, stockold, id_categoria, id_marca, id_unidad, tipo_producto) SELECT 'Cargador rapido Samsung 25 W', 79, 79, 20, 30, 30, (SELECT MIN(id_categoria) FROM categoria WHERE nombre = 'Accesorios'), (SELECT MIN(id_marca) FROM marca WHERE nombre = 'Samsung'), (SELECT MIN(id_unidad) FROM unid_medida WHERE nombre_medida = 'Unidad'), 'PRODUCTO' WHERE NOT EXISTS (SELECT 1 FROM producto WHERE nombre = 'Cargador rapido Samsung 25 W');
+
+-- Clientes de ejemplo (datos ficticios)
+INSERT INTO cliente (dniruc, nombres, rep_legal, direccion, tipo_documento) SELECT '71234567', 'Maria Quispe Mamani', '', 'Jr. Moquegua 456 - Juliaca', 'DNI' WHERE NOT EXISTS (SELECT 1 FROM cliente WHERE dniruc = '71234567');
+INSERT INTO cliente (dniruc, nombres, rep_legal, direccion, tipo_documento) SELECT '72345678', 'Carlos Apaza Condori', '', 'Av. Circunvalacion 789 - Juliaca', 'DNI' WHERE NOT EXISTS (SELECT 1 FROM cliente WHERE dniruc = '72345678');
+INSERT INTO cliente (dniruc, nombres, rep_legal, direccion, tipo_documento) SELECT '20601234567', 'Inversiones Altiplano S.A.C.', 'Jose Huanca Ccama', 'Av. Huancane 321 - Juliaca', 'RUC' WHERE NOT EXISTS (SELECT 1 FROM cliente WHERE dniruc = '20601234567');
+
+-- Datos de la empresa para el comprobante (ficticios)
+INSERT INTO emisor (ruc, nombre_comercial, ubigeo, domicilio_fiscal, urbanizacion, departamento, provincia, distrito) SELECT '20123456789', 'Coolbox Juliaca', '211101', 'Jr. San Roman 123', 'Cercado', 'Puno', 'San Roman', 'Juliaca' WHERE NOT EXISTS (SELECT 1 FROM emisor WHERE ruc = '20123456789');
