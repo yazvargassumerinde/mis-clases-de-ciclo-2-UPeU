@@ -20,11 +20,16 @@ public class AbrirConsolaH2 {
         System.out.println("Si el navegador no se abre solo, entra a: http://localhost:8082");
         System.out.println("Para cerrar la consola, presiona el cuadrado rojo en IntelliJ.");
 
-        org.h2.tools.Server web = org.h2.tools.Server.createWebServer("-webPort", "8082").start();
         try {
-            org.h2.tools.Server.openBrowser(web.getURL());
+            org.h2.tools.Server.createWebServer("-webPort", "8082").start();
         } catch (Exception e) {
-            System.out.println("No se pudo abrir el navegador automaticamente: " + web.getURL());
+            // El puerto ya está ocupado: la consola ya está abierta (por ejemplo, desde el programa)
+            System.out.println("La consola H2 ya estaba abierta. Solo se abre el navegador.");
+        }
+        try {
+            org.h2.tools.Server.openBrowser("http://localhost:8082");
+        } catch (Exception e) {
+            System.out.println("Abre el navegador en: http://localhost:8082");
         }
     }
 }

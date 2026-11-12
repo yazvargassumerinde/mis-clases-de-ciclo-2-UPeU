@@ -1,0 +1,33 @@
+COOLBOX - BASE DE DATOS (H2)
+============================
+
+ARCHIVOS
+- coolbox.architect : modelo para abrir en SQL Power Architect (File > Open Project).
+- coolbox.sql       : script SQL generado desde el modelo. Crea las 16 tablas,
+                      las 16 relaciones y carga datos de ejemplo de Coolbox.
+- programa_H2/      : los 2 scripts que ejecuta el programa al arrancar
+                      (primero schema_sv.sql, despues scripts.sql).
+
+El modelo, coolbox.sql y la base que crea el programa son IGUALES:
+16 tablas, 109 columnas y 16 relaciones.
+
+USUARIOS PARA ENTRAR AL PROGRAMA (claves encriptadas con SHA-256)
+- yazminvs  / yaz123    (Root: ve todo)
+- admin     / admin123  (Root)
+- pepe      / pepe12    (Reporte)
+- proveedor / prov123   (Proveedor: solo ve Compra > Reg. Proveedor)
+
+COMO VER LA BASE EN LA CONSOLA H2
+1. Cerrar el programa (H2 no deja abrir la base en dos lugares a la vez).
+2. Abrir la carpeta:  %USERPROFILE%\.m2\repository\com\h2database\h2\2.4.240
+3. En la barra de direcciones escribir  cmd  y Enter.
+4. En la ventana negra:  java -jar h2-2.4.240.jar
+5. En el navegador:
+     JDBC URL : jdbc:h2:file:RUTA_DE_TU_PROYECTO/SysVentas/data/sysventas
+     Usuario  : sa
+     Clave    : (vacio)
+6. Probar:  SELECT * FROM producto;
+
+COMO CREAR LA BASE SOLO CON EL SCRIPT (sin el programa)
+En la consola H2, conectado a una base nueva, ejecutar:
+     RUNSCRIPT FROM 'RUTA/coolbox.sql';
