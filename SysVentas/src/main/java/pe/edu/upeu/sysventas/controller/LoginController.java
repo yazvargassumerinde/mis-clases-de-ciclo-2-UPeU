@@ -33,14 +33,24 @@ public class LoginController {
 
     @FXML
     public void login(ActionEvent e){
-       us.loginUsuario(txtUsuario.getText(), txtClave.getText()).ifPresentOrElse(usuario ->
-       {abrirPantalla(e,usuario);},
-               () ->{
-                   Stage stage = (Stage) ((Node)e.getSource()).getScene().getWindow();
-                   double w = stage.getWidth() / 1.5, h = stage.getHeight() / 2;
-                   Toast.showToast(stage, "Error en las credenciales....Intente nuevamente", 2000, w, h);
-               }
-       );
+        String usuario = txtUsuario.getText() == null ? "" : txtUsuario.getText().trim();
+        String clave = txtClave.getText() == null ? "" : txtClave.getText();
+
+        // Validación: no consultar la base de datos si los campos están vacíos
+        if (usuario.isEmpty() || clave.isEmpty()) {
+            mensaje(e, "Ingrese su usuario y su clave");
+            (usuario.isEmpty() ? txtUsuario : txtClave).requestFocus();
+            return;
+        }
+
+        us.loginUsuario(usuario, clave).ifPresentOrElse(
+                u -> abrirPantalla(e, u),
+                () -> {
+                    mensaje(e, "Usuario o clave incorrectos, o usuario inactivo");
+                    txtClave.clear();
+                    txtClave.requestFocus();
+                }
+        );
     }
     public void mensaje(ActionEvent e, String msg){
         Stage stage = (Stage) ((Node)e.getSource()).getScene().getWindow();
@@ -50,9 +60,10 @@ public class LoginController {
 
     @FXML
     public void logout(){
+        // Primero se cierra la base de datos y luego el programa
+        DatabaseConfig.shutdown();
         Platform.exit();
         System.exit(0);
-        DatabaseConfig.shutdown();
     }
 
     public void abrirPantalla(ActionEvent e, Usuario usuario){
@@ -71,7 +82,7 @@ public class LoginController {
             scene.getStylesheets().add(SysVentas.class.getResource("/css/style.css").toExternalForm());
             Stage stage = (Stage) ((Node)e.getSource()).getScene().getWindow();
             StageManager.setPrimaryStage(stage);
-            stage.setTitle("Hello!");
+            stage.setTitle("Coolbox");
             stage.setScene(scene);
             stage.setResizable(true);
             stage.show();

@@ -181,7 +181,7 @@ public class MainGuiController {
                 stage.sizeToScene();
                 stage.setScene(scene);
                 stage.centerOnScreen();
-                stage.setTitle("SysVentas SysCenterLife");
+                stage.setTitle("Coolbox");
                 stage.setResizable(false);
                 stage.show();
             } catch (Exception ex) {
