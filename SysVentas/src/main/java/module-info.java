@@ -8,6 +8,7 @@ module pe.edu.upeu.sysventas {
     requires jakarta.validation;
 
     requires java.sql;
+    requires com.h2database;
     requires java.naming;
     requires org.slf4j;
     requires com.zaxxer.hikari;

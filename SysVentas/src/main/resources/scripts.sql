@@ -17,9 +17,13 @@ ALTER TABLE venta ADD COLUMN IF NOT EXISTS id_promocion INTEGER;
 ALTER TABLE venta ADD COLUMN IF NOT EXISTS descuento DOUBLE PRECISION DEFAULT 0 NOT NULL;
 ALTER TABLE venta ADD CONSTRAINT IF NOT EXISTS promocion_venta_fk FOREIGN KEY (id_promocion) REFERENCES promocion (id_promocion);
 
+-- Login de proveedores: la cuenta de usuario puede pertenecer a un proveedor
+ALTER TABLE usuario ADD COLUMN IF NOT EXISTS id_proveedor INTEGER;
+ALTER TABLE usuario ADD CONSTRAINT IF NOT EXISTS proveedor_usuario_fk FOREIGN KEY (id_proveedor) REFERENCES proveedor (id_proveedor);
+
 -- 2. Perfiles y usuarios. Las claves estan encriptadas con SHA-256 (ver PasswordUtil):
 --    admin -> admin123   |   yazminvs -> yaz123   |   pepe -> pepe12
-MERGE INTO perfil (id_perfil, nombre, codigo) KEY (id_perfil) VALUES (1, 'Root', 'ROOT'), (2, 'Administrador', 'ADM'), (3, 'Reporte', 'REP');
+MERGE INTO perfil (id_perfil, nombre, codigo) KEY (id_perfil) VALUES (1, 'Root', 'ROOT'), (2, 'Administrador', 'ADM'), (3, 'Reporte', 'REP'), (4, 'Proveedor', 'PRO');
 MERGE INTO usuario (id_usuario, usuario, clave, estado, id_perfil) KEY (id_usuario)
     VALUES (1, 'admin', 'JAvlGPq9JyTdtvBO6x2llnRI1+gxwIyPqCKAn3THIKk=', 'ACTIVO', 1),
            (2, 'yazminvs', 'jAgi9Yuk7cB0k8ZeTP9Xnxl0i/j4rI4oO3s715887OY=', 'ACTIVO', 1),
@@ -80,3 +84,8 @@ INSERT INTO emisor (ruc, nombre_comercial, ubigeo, domicilio_fiscal, urbanizacio
 INSERT INTO promocion (nombre, descripcion, porcentaje, fecha_inicio, fecha_fin, estado) SELECT 'Navidad', 'Descuento navideno en toda la tienda', 15, DATE '2026-12-01', DATE '2026-12-25', 'ACTIVO' WHERE NOT EXISTS (SELECT 1 FROM promocion WHERE nombre = 'Navidad');
 INSERT INTO promocion (nombre, descripcion, porcentaje, fecha_inicio, fecha_fin, estado) SELECT 'Cyber Wow', 'Ofertas en audifonos y parlantes', 20, DATE '2026-11-15', DATE '2026-11-18', 'ACTIVO' WHERE NOT EXISTS (SELECT 1 FROM promocion WHERE nombre = 'Cyber Wow');
 INSERT INTO promocion (nombre, descripcion, porcentaje, fecha_inicio, fecha_fin, estado) SELECT 'Dia de la Madre', 'Descuento en electrodomesticos', 10, DATE '2027-05-01', DATE '2027-05-10', 'INACTIVO' WHERE NOT EXISTS (SELECT 1 FROM promocion WHERE nombre = 'Dia de la Madre');
+
+-- Proveedor de ejemplo y su cuenta para entrar al sistema (datos ficticios)
+--    proveedor -> prov123  (perfil Proveedor: solo ve el CRUD de proveedores)
+INSERT INTO proveedor (dniruc, nombres_raso, tipo_doc, celular, email, direccion) SELECT '20456789012', 'Distribuidora Andina S.A.C.', 'RUC', '951234567', 'ventas@andina.pe', 'Av. Industrial 450 - Juliaca' WHERE NOT EXISTS (SELECT 1 FROM proveedor WHERE dniruc = '20456789012');
+INSERT INTO usuario (usuario, clave, estado, id_perfil, id_proveedor) SELECT 'proveedor', 'paJOiOD/fOaV+qtKFhkuxn5q7rEukyRA8AXBniX37sY=', 'ACTIVO', 4, (SELECT MIN(id_proveedor) FROM proveedor WHERE dniruc = '20456789012') WHERE NOT EXISTS (SELECT 1 FROM usuario WHERE usuario = 'proveedor');

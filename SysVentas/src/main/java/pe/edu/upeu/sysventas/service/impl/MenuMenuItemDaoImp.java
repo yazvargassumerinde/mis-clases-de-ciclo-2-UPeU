@@ -21,6 +21,8 @@ public class MenuMenuItemDaoImp implements IMenuMenuItemDao {
                 "Venta", "Reg. Cliente", "Gestionar Cliente", "T"));
         lista.add(new MenuMenuItenTO("miventa", "/view/main_venta.fxml",
                 "Venta", "Reg. Venta", "Gestionar Ventas", "T"));
+        lista.add(new MenuMenuItenTO("miproveedor", "/view/main_proveedor.fxml",
+                "Compra", "Reg. Proveedor", "Gestionar Proveedores", "T"));
 
         List<MenuMenuItenTO> accesoReal = new ArrayList<>();
 
@@ -30,12 +32,16 @@ public class MenuMenuItemDaoImp implements IMenuMenuItemDao {
             case "Administrador":
                 accesoReal.add(lista.get(1)); // miproducto
                 accesoReal.add(lista.get(2)); // micliente
+                accesoReal.add(lista.get(4)); // miproveedor
                 break;
             case "Root":
                 accesoReal = lista;
                 break;
             case "Reporte":
                 accesoReal.add(lista.get(2)); // micliente
+                break;
+            case "Proveedor":
+                accesoReal.add(lista.get(4)); // miproveedor (CRUD de Yerson)
                 break;
             default:
                 throw new AssertionError();

@@ -162,11 +162,16 @@ ALTER TABLE venta ADD COLUMN IF NOT EXISTS id_promocion INTEGER;
 ALTER TABLE venta ADD COLUMN IF NOT EXISTS descuento DOUBLE PRECISION DEFAULT 0 NOT NULL;
 ALTER TABLE venta ADD CONSTRAINT IF NOT EXISTS promocion_venta_fk FOREIGN KEY (id_promocion) REFERENCES promocion (id_promocion);
 
+-- Login de proveedores: la cuenta de usuario puede pertenecer a un proveedor
+ALTER TABLE usuario ADD COLUMN IF NOT EXISTS id_proveedor INTEGER;
+ALTER TABLE usuario ADD CONSTRAINT IF NOT EXISTS proveedor_usuario_fk FOREIGN KEY (id_proveedor) REFERENCES proveedor (id_proveedor);
+
 -- Datos iniciales (MERGE ... KEY los hace idempotentes)
 MERGE INTO perfil (id_perfil, nombre, codigo) KEY (id_perfil) VALUES
     (1, 'Root', 'ROOT'),
     (2, 'Administrador', 'ADM'),
-    (3, 'Reporte', 'REP');
+    (3, 'Reporte', 'REP'),
+    (4, 'Proveedor', 'PRO');
 
 MERGE INTO usuario (id_usuario, usuario, clave, estado, id_perfil) KEY (id_usuario) VALUES
     (1, 'admin', 'JAvlGPq9JyTdtvBO6x2llnRI1+gxwIyPqCKAn3THIKk=', 'ACTIVO', 1),
@@ -234,3 +239,8 @@ INSERT INTO cliente (dniruc, nombres, rep_legal, direccion, tipo_documento) SELE
 
 -- Datos de la empresa para el comprobante (ficticios)
 INSERT INTO emisor (ruc, nombre_comercial, ubigeo, domicilio_fiscal, urbanizacion, departamento, provincia, distrito) SELECT '20123456789', 'Coolbox Juliaca', '211101', 'Jr. San Roman 123', 'Cercado', 'Puno', 'San Roman', 'Juliaca' WHERE NOT EXISTS (SELECT 1 FROM emisor WHERE ruc = '20123456789');
+
+-- Proveedor de ejemplo y su cuenta para entrar al sistema (datos ficticios)
+--    proveedor -> prov123  (perfil Proveedor: solo ve el CRUD de proveedores)
+INSERT INTO proveedor (dniruc, nombres_raso, tipo_doc, celular, email, direccion) SELECT '20456789012', 'Distribuidora Andina S.A.C.', 'RUC', '951234567', 'ventas@andina.pe', 'Av. Industrial 450 - Juliaca' WHERE NOT EXISTS (SELECT 1 FROM proveedor WHERE dniruc = '20456789012');
+INSERT INTO usuario (usuario, clave, estado, id_perfil, id_proveedor) SELECT 'proveedor', 'paJOiOD/fOaV+qtKFhkuxn5q7rEukyRA8AXBniX37sY=', 'ACTIVO', 4, (SELECT MIN(id_proveedor) FROM proveedor WHERE dniruc = '20456789012') WHERE NOT EXISTS (SELECT 1 FROM usuario WHERE usuario = 'proveedor');
