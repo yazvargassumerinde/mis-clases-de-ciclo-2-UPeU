@@ -23,6 +23,8 @@ public class MenuMenuItemDaoImp implements IMenuMenuItemDao {
                 "Venta", "Reg. Venta", "Gestionar Ventas", "T"));
         lista.add(new MenuMenuItenTO("miproveedor", "/view/main_proveedor.fxml",
                 "Compra", "Reg. Proveedor", "Gestionar Proveedores", "T"));
+        lista.add(new MenuMenuItenTO("micompra", "/view/main_compra.fxml",
+                "Compra", "Reg. Compra", "Gestionar Compras", "T"));
 
         List<MenuMenuItenTO> accesoReal = new ArrayList<>();
 
@@ -33,6 +35,7 @@ public class MenuMenuItemDaoImp implements IMenuMenuItemDao {
                 accesoReal.add(lista.get(1)); // miproducto
                 accesoReal.add(lista.get(2)); // micliente
                 accesoReal.add(lista.get(4)); // miproveedor
+                accesoReal.add(lista.get(5)); // micompra (Yoseth)
                 break;
             case "Root":
                 accesoReal = lista;

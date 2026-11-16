@@ -60,4 +60,8 @@ public class ProductoServiceImp extends CrudGenericoServiceImp<Producto, Long> i
         return listarProducto;
     }
 
+    @Override
+    public void actualizarStock(Long idProducto, double cantidad) {
+        productoRepository.actualizarStock(idProducto, cantidad);
+    }
 }

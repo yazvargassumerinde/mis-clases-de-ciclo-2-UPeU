@@ -121,10 +121,30 @@ public class ProveedorController {
                 .sorted(Comparator.comparing(v -> v.getPropertyPath().toString())).toList();
 
         if (violacionesOrdenadas.isEmpty()) {
+            // Regla extra (Yerson): el largo del documento depende de su tipo
+            String error = validarDocumento(formulario.getTipoDoc(), formulario.getDniruc());
+            if (error != null) {
+                limpiarError();
+                ttc.marcarError(txtDniRuc, error);
+                lbnMsg.setText(error);
+                lbnMsg.setStyle("-fx-text-fill: red; -fx-font-size: 14px;");
+                return;
+            }
             procesarFormulario();
         } else {
             mostrarErroresValidacion(violacionesOrdenadas);
         }
+    }
+
+    /** RUC: 11 dígitos y empieza en 10 o 20. DNI: 8 dígitos. Devuelve null si está bien. */
+    private String validarDocumento(String tipo, String doc) {
+        if ("RUC".equals(tipo) && !doc.matches("(10|20)\\d{9}")) {
+            return "El RUC debe tener 11 dígitos y empezar con 10 o 20";
+        }
+        if ("DNI".equals(tipo) && !doc.matches("\\d{8}")) {
+            return "El DNI debe tener 8 dígitos";
+        }
+        return null;
     }
 
     @FXML

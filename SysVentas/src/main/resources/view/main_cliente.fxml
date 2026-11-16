@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
@@ -11,13 +12,13 @@
          <children>
             <AnchorPane>
                <children>
-                  <Label layoutX="53.0" layoutY="14.0" text="Gestionar cliente" textFill="#5d17df">
+                  <Label layoutX="53.0" layoutY="14.0" text="Gestionar cliente" styleClass="titulo-pantalla" textFill="#7B1E2B">
                      <font>
                         <Font name="Berlin Sans FB Bold" size="13.0" />
                      </font>
                   </Label>
                   <Label layoutX="248.0" layoutY="32.0" text="Filtrar por DNI/RUC o nombre" />
-                  <TextField fx:id="txtFiltroDato" layoutX="248.0" layoutY="50.0" prefWidth="220.0" />
+                  <TextField fx:id="txtFiltroDato" promptText="Escribe para buscar..." layoutX="248.0" layoutY="50.0" prefWidth="220.0" />
                </children>
                <padding>
                   <Insets bottom="5.0" />
@@ -46,17 +47,23 @@
                            <children>
                               <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Formulario de registro" GridPane.columnSpan="2147483647" />
                               <Label text="Tipo Documento" GridPane.rowIndex="1" />
-                              <ComboBox fx:id="cbxTipoDocumento" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
+                              <ComboBox fx:id="cbxTipoDocumento" promptText="Elige DNI o RUC" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
                               <Label text="DNI / RUC" GridPane.rowIndex="2" />
-                              <TextField fx:id="txtDniRuc" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
+                              <TextField fx:id="txtDniRuc" promptText="DNI 8 dígitos / RUC 11" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
                               <Label text="Nombres / Razón S." GridPane.rowIndex="3" />
-                              <TextField fx:id="txtNombres" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
+                              <TextField fx:id="txtNombres" promptText="Nombre o razón social" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
                               <Label text="Rep. Legal" GridPane.rowIndex="4" />
-                              <TextField fx:id="txtRepLegal" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
+                              <TextField fx:id="txtRepLegal" promptText="Representante legal (opcional)" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
                               <Label text="Dirección" GridPane.rowIndex="5" />
-                              <TextField fx:id="txtDireccion" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="5" />
-                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#guardar" text="Guardar" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancelar" text="Cancelar" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                              <TextField fx:id="txtDireccion" promptText="Ej: Jr. Lima 123, Juliaca" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="5" />
+                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#guardar" text="Guardar" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                 <graphic><ImageView fitHeight="18.0" fitWidth="18.0" preserveRatio="true"><image><Image url="@../img/ic-guardar.png" /></image></ImageView></graphic>
+                                 <tooltip><Tooltip text="Guarda los datos del cliente" /></tooltip>
+                              </Button>
+                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancelar" text="Cancelar" styleClass="btn-cancelar" GridPane.columnIndex="2" GridPane.rowIndex="6">
+                                 <graphic><ImageView fitHeight="18.0" fitWidth="18.0" preserveRatio="true"><image><Image url="@../img/ic-cancelar.png" /></image></ImageView></graphic>
+                                 <tooltip><Tooltip text="Limpia el formulario sin guardar" /></tooltip>
+                              </Button>
                               <Label fx:id="lbnMsg" maxWidth="1.7976931348623157E308" textFill="#b71c1c" GridPane.columnSpan="2147483647" GridPane.rowIndex="7" />
                            </children>
                         </GridPane>
@@ -64,7 +71,9 @@
                   </AnchorPane>
                   <AnchorPane HBox.hgrow="ALWAYS">
                      <children>
-                        <TableView fx:id="tableView" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                        <TableView fx:id="tableView" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+   <placeholder><Label styleClass="tabla-vacia" text="Aún no hay registros. Usa el formulario para agregar uno." /></placeholder>
+</TableView>
                      </children>
                   </AnchorPane>
                </children>

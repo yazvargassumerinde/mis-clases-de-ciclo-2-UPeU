@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
 <AnchorPane fx:id="miContenedor" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pe.edu.upeu.sysventas.controller.VentaController">
@@ -25,8 +26,11 @@
                     </rowConstraints>
                      <children>
                         <Label text="DNI/RUC de Cliente" />
-                        <TextField fx:id="autocompCliente" GridPane.rowIndex="1" />
+                        <TextField fx:id="autocompCliente" promptText="Escribe DNI/RUC o nombre" GridPane.rowIndex="1" />
                         <Button fx:id="btnFormCliente" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#buscarClienteCdni" text="Buscar" GridPane.columnIndex="1" GridPane.rowSpan="2147483647">
+                           <graphic><ImageView fitHeight="18.0" fitWidth="18.0" preserveRatio="true"><image><Image url="@../img/ic-buscar.png" /></image></ImageView></graphic>
+                           <tooltip><Tooltip text="Busca al cliente por DNI o RUC" /></tooltip>
+
                            <GridPane.margin>
                               <Insets left="5.0" />
                            </GridPane.margin>
@@ -36,7 +40,7 @@
                               <Insets left="5.0" />
                            </GridPane.margin>
                         </Label>
-                        <TextField fx:id="dniRuc" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                        <TextField fx:id="dniRuc" promptText="Se llena solo" GridPane.columnIndex="2" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets left="5.0" />
                            </GridPane.margin>
@@ -46,7 +50,7 @@
                               <Insets left="5.0" />
                            </GridPane.margin>
                         </Label>
-                        <TextField fx:id="razonSocial" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                        <TextField fx:id="razonSocial" promptText="Se llena solo" GridPane.columnIndex="3" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets left="5.0" />
                            </GridPane.margin>
@@ -56,12 +60,15 @@
                               <Insets left="5.0" />
                            </GridPane.margin>
                         </Label>
-                        <TextField fx:id="txtDireccion" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                        <TextField fx:id="txtDireccion" promptText="Se llena solo" GridPane.columnIndex="4" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets left="5.0" />
                            </GridPane.margin>
                         </TextField>
                         <Button fx:id="btnRegCliente" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#guardarCliente" text="Add" GridPane.columnIndex="5" GridPane.rowSpan="2147483647">
+                           <graphic><ImageView fitHeight="18.0" fitWidth="18.0" preserveRatio="true"><image><Image url="@../img/ic-cliente.png" /></image></ImageView></graphic>
+                           <tooltip><Tooltip text="Registra un cliente nuevo" /></tooltip>
+
                            <GridPane.margin>
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>
@@ -123,37 +130,40 @@
                            </GridPane.margin>
                         </Label>
                         <Button fx:id="btnRegCarrito" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#registarPCarrito" text="Add" GridPane.columnIndex="7" GridPane.rowSpan="2147483647">
+                           <graphic><ImageView fitHeight="18.0" fitWidth="18.0" preserveRatio="true"><image><Image url="@../img/ic-carrito.png" /></image></ImageView></graphic>
+                           <tooltip><Tooltip text="Agrega el producto al carrito" /></tooltip>
+
                            <GridPane.margin>
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>
                         </Button>
-                        <TextField fx:id="autocompProducto" GridPane.rowIndex="1" />
-                        <TextField fx:id="nombreProducto" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <TextField fx:id="autocompProducto" promptText="Escribe el nombre del producto" GridPane.rowIndex="1" />
+                        <TextField fx:id="nombreProducto" promptText="Se llena solo" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets left="5.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="codigoPro" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                        <TextField fx:id="codigoPro" promptText="Código" GridPane.columnIndex="2" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets left="5.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="stockPro" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                        <TextField fx:id="stockPro" promptText="Stock" GridPane.columnIndex="3" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets left="5.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="cantidadPro" onKeyTyped="#calcularPT" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                        <TextField fx:id="cantidadPro" promptText="Cantidad" onKeyTyped="#calcularPT" GridPane.columnIndex="4" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets left="5.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="punitPro" GridPane.columnIndex="5" GridPane.rowIndex="1">
+                        <TextField fx:id="punitPro" promptText="Precio" GridPane.columnIndex="5" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets left="5.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="preTPro" GridPane.columnIndex="6" GridPane.rowIndex="1">
+                        <TextField fx:id="preTPro" promptText="Total" GridPane.columnIndex="6" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets left="5.0" />
                            </GridPane.margin>
@@ -168,6 +178,7 @@
                      <padding>
                         <Insets right="5.0" />
                      </padding>
+                     <placeholder><Label styleClass="tabla-vacia" text="El carrito está vacío. Busca un producto y agrégalo." /></placeholder>
                   </TableView>
                </children>
                <VBox.margin>
@@ -206,22 +217,25 @@
                            </GridPane.margin>
                         </Label>
                         <Button fx:id="btnRegVenta" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#registrarVenta" text="R. Venta" GridPane.columnIndex="4" GridPane.rowSpan="2147483647">
+                           <graphic><ImageView fitHeight="18.0" fitWidth="18.0" preserveRatio="true"><image><Image url="@../img/ic-venta.png" /></image></ImageView></graphic>
+                           <tooltip><Tooltip text="Registra la venta y genera el comprobante" /></tooltip>
+
                            <GridPane.margin>
                               <Insets left="5.0" right="10.0" />
                            </GridPane.margin>
                         </Button>
-                        <TextField fx:id="txtBaseImp" GridPane.rowIndex="1" />
-                        <TextField fx:id="txtIgv" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <TextField fx:id="txtBaseImp" promptText="0.00" GridPane.rowIndex="1" />
+                        <TextField fx:id="txtIgv" promptText="0.00" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets left="5.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="txtDescuento" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                        <TextField fx:id="txtDescuento" promptText="0.00" GridPane.columnIndex="2" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets left="5.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="txtImporteT" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                        <TextField fx:id="txtImporteT" promptText="0.00" GridPane.columnIndex="3" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets left="5.0" />
                            </GridPane.margin>

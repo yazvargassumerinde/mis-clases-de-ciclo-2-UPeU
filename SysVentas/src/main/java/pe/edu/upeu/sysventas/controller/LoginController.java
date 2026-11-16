@@ -80,6 +80,7 @@ public class LoginController {
             fxmlLoader.setControllerFactory(appContext::getBean);
             Scene scene = new Scene(fxmlLoader.load(),rectangle2D.getWidth(),rectangle2D.getHeight());
             scene.getStylesheets().add(SysVentas.class.getResource("/css/style.css").toExternalForm());
+            scene.getStylesheets().add(SysVentas.class.getResource("/css/estilo-coolbox.css").toExternalForm());
             Stage stage = (Stage) ((Node)e.getSource()).getScene().getWindow();
             StageManager.setPrimaryStage(stage);
             stage.setTitle("Coolbox");

@@ -101,6 +101,17 @@ public class ProductoRepository extends AbstractJpaRepository<Producto,Long > {
         return e;
     }
 
+    /**
+     * Control de stock (Eydam): suma la cantidad al stock del producto.
+     * Compra -> cantidad positiva (entra mercadería). Venta -> cantidad negativa (sale mercadería).
+     * Antes de cambiarlo, guarda el valor actual en stockold.
+     */
+    public void actualizarStock(Long idProducto, double cantidad) {
+        executeUpdateStandalone(
+                "UPDATE producto SET stockold = stock, stock = stock + ? WHERE id_producto = ?",
+                cantidad, idProducto);
+    }
+
     public List<Producto> listAutoCompletProducto(String filter) {
         return executeQuery(SELECT_JOIN + "WHERE p.nombre LIKE ?", filter);
     }

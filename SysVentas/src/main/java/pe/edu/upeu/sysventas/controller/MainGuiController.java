@@ -10,6 +10,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +40,14 @@ public class MainGuiController {
     @FXML
     BorderPane bp;
 
+    // Pantalla de inicio (bienvenida y accesos rápidos)
+    @FXML
+    Tab tabPrincipal;
+    @FXML
+    Label lblUsuario;
+    @FXML
+    FlowPane panelAccesos;
+
     @FXML
     MenuBar menuBar;
 
@@ -50,7 +61,7 @@ public class MainGuiController {
     @FXML private Menu menuEstilo = new Menu("Cambiar Estilo");
     ComboBox<String> comboBoxEstilo = new ComboBox<>(
             FXCollections.observableArrayList(
-                    "Estilo por Defecto", "Estilo Oscuro",
+                    "Estilo Van Gogh", "Estilo Navideño", "Estilo por Defecto", "Estilo Oscuro",
                     "Estilo Azul", "Estilo Verde", "Estilo Rosado"));
     CustomMenuItem customItem = new CustomMenuItem(comboBoxEstilo);
     @FXML private Menu menuIdioma = new Menu("Idioma");
@@ -69,6 +80,61 @@ public class MainGuiController {
         pause.play();
         graficarMenus();
         bp.setCenter(tabPane);
+        SessionManager ses = SessionManager.getInstance();
+        lblUsuario.setText("Hola, " + ses.getUserName() + "  ·  Perfil: " + ses.getUserPerfil());
+    }
+
+    // Crea un botón por cada pantalla a la que el usuario tiene acceso
+    private void cargarAccesosRapidos() {
+        if (panelAccesos == null) return;
+        panelAccesos.getChildren().clear();
+        for (MenuMenuItenTO m : lista) {
+            if ("C".equals(m.getTipoTab())) continue;   // "Salir" no va como acceso rápido
+            Button b = new Button(m.getMenuitemnombre());
+            b.getStyleClass().add("acceso-rapido");
+            b.setTooltip(new Tooltip("Abrir " + m.getNombreTab()));
+            // Icono arriba del texto: vino normal, blanco al pasar el mouse
+            String nombreIcono = m.getIdNombreObj().replaceFirst("^mi", "");   // producto, cliente, venta...
+            var urlVino = getClass().getResource("/img/ic-" + nombreIcono + "-vino.png");
+            var urlBlanco = getClass().getResource("/img/ic-" + nombreIcono + ".png");
+            if (urlVino != null && urlBlanco != null) {
+                Image icVino = new Image(urlVino.toExternalForm());
+                Image icBlanco = new Image(urlBlanco.toExternalForm());
+                ImageView iv = new ImageView(icVino);
+                iv.setFitWidth(26);
+                iv.setFitHeight(26);
+                b.setGraphic(iv);
+                b.setContentDisplay(ContentDisplay.TOP);
+                b.hoverProperty().addListener((obs, antes, encima) -> iv.setImage(encima ? icBlanco : icVino));
+            }
+            b.setOnAction(e -> abrirTab(m.getRutaFile(), m.getNombreTab()));
+            panelAccesos.getChildren().add(b);
+        }
+    }
+
+    // Abre una pantalla en su pestaña. Si ya está abierta, solo la muestra.
+    private void abrirTab(String fxmlPath, String tittle) {
+        for (Tab t : tabPane.getTabs()) {
+            if (tittle.equals(t.getText())) {
+                tabPane.getSelectionModel().select(t);
+                return;
+            }
+        }
+        try {
+            AppContext context = AppContext.getInstance();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
+            fxmlLoader.setControllerFactory(context::getBean);
+            Parent root = fxmlLoader.load();
+
+            ScrollPane scrollPane = new ScrollPane(root);
+            scrollPane.setFitToWidth(true);
+            scrollPane.setFitToHeight(true);
+            Tab newTab = new Tab(tittle, scrollPane);
+            tabPane.getTabs().add(newTab);
+            tabPane.getSelectionModel().select(newTab);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     private List<MenuMenuItenTO> listaAccesos() {
@@ -80,6 +146,12 @@ public class MainGuiController {
         Scene escena = bp.getScene();
         escena.getStylesheets().clear();
         switch (estiloSeleccionado) {
+            case "Estilo Van Gogh":
+                escena.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+                escena.getStylesheets().add(getClass().getResource("/css/estilo-coolbox.css").toExternalForm()); break;
+            case "Estilo Navideño":
+                escena.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+                escena.getStylesheets().add(getClass().getResource("/css/estilo-navidad.css").toExternalForm()); break;
             case "Estilo Oscuro":
                 escena.getStylesheets().add(getClass().getResource("/css/estilo-oscuro.css").toExternalForm()); break;
             case "Estilo Azul":
@@ -149,6 +221,7 @@ public class MainGuiController {
         menuIdioma.getItems().add(customItemIdioma);
         menuBar.getMenus().addAll(menuIdioma);
         bp.setTop(menuBar);
+        cargarAccesosRapidos();
     }
 
     class MenuItemListener{
@@ -178,6 +251,8 @@ public class MainGuiController {
                 fxmlLoader.setControllerFactory(clazz -> ctx.getBean(clazz));
                 parent = fxmlLoader.load();
                 Scene scene = new Scene(parent);
+                scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+                scene.getStylesheets().add(getClass().getResource("/css/estilo-coolbox.css").toExternalForm());
                 stage.sizeToScene();
                 stage.setScene(scene);
                 stage.centerOnScreen();
@@ -190,21 +265,7 @@ public class MainGuiController {
         }
 
         private void abrirTabPaneFXML(String fxmlPath, String tittle){
-            try {
-                AppContext context = AppContext.getInstance();
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
-                fxmlLoader.setControllerFactory(context::getBean);
-                Parent root = fxmlLoader.load();
-
-                ScrollPane scrollPane = new ScrollPane(root);
-                scrollPane.setFitToWidth(true);
-                scrollPane.setFitToHeight(true);
-                Tab newTab = new Tab(tittle, scrollPane);
-                tabPane.getTabs().clear();
-                tabPane.getTabs().add(newTab);
-            }catch (IOException ex){
-                throw new RuntimeException(ex);
-            }
+            abrirTab(fxmlPath, tittle);
         }
     }
 }

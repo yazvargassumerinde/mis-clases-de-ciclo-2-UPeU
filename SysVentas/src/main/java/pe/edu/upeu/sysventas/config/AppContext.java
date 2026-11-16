@@ -50,6 +50,11 @@ public class AppContext {
         registrar(VentaDetalleRepository.class, new VentaDetalleRepository());
         registrar(VentaRepository.class, new VentaRepository());
 
+        // Compras (Yoseth)
+        registrar(CompCarritoRepository.class, new CompCarritoRepository());
+        registrar(CompraRepository.class, new CompraRepository());
+        registrar(CompraDetalleRepository.class, new CompraDetalleRepository());
+
     }
 
     // CAPA 2 — SERVICIOS
@@ -72,6 +77,10 @@ public class AppContext {
         registrar(IVentaCarritoService.class, new VentaCarritoServiceImp(getBean(VentCarritoRepository.class)));
         registrar(IVentaDetalleService.class, new VentaDetalleServiceImp(getBean(VentaDetalleRepository.class)));
         registrar(IVentaService.class, new VentaServiceImp(getBean(VentaRepository.class), ds));
+
+        registrar(ICompraCarritoService.class, new CompraCarritoServiceImp(getBean(CompCarritoRepository.class)));
+        registrar(ICompraService.class, new CompraServiceImp(getBean(CompraRepository.class)));
+        registrar(ICompraDetalleService.class, new CompraDetalleServiceImp(getBean(CompraDetalleRepository.class)));
 
     }
 
@@ -104,6 +113,15 @@ public class AppContext {
                         getBean(IVentaService.class),
                         getBean(IVentaDetalleService.class),
                         getBean(ConsultaDNI.class)));
+
+        registrar(CompraController.class,
+                new CompraController(
+                        getBean(IProveedorService.class),
+                        getBean(IProductoService.class),
+                        getBean(ICompraCarritoService.class),
+                        getBean(IUsuarioService.class),
+                        getBean(ICompraService.class),
+                        getBean(ICompraDetalleService.class)));
 
     }
 

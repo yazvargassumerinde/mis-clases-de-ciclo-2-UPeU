@@ -282,6 +282,16 @@ public class VentaController {
     @FXML
     private void registarPCarrito(){
         System.out.println("ID:"+SessionManager.getInstance().getUserId());
+        // Control de stock: no se puede vender más de lo que hay
+        try {
+            double cantidad = Double.parseDouble(cantidadPro.getText());
+            double stock = Double.parseDouble(stockPro.getText());
+            if (cantidad > stock) {
+                Stage st = StageManager.getPrimaryStage();
+                Toast.showToast(st, "Stock insuficiente: solo hay " + stock + " unidades", 2500, st.getMaxWidth() / 2, 50);
+                return;
+            }
+        } catch (NumberFormatException ignored) {}
         try {
             VentCarrito ss= VentCarrito.builder()
                     .dniruc(dniRuc.getText())
@@ -336,10 +346,14 @@ public class VentaController {
                             .build();
                     VentaDetalle vdTemp=daoVD.save(vd);
                     vdList.add(vdTemp);
+                    // Control de stock: la mercadería que sale se resta del stock
+                    ps.actualizarStock(car.getIdProducto().getIdProducto(), -car.getCantidad());
                 }
             }
             daoC.deleteCarAll(dniRuc.getText());
             listar();
+            entries.clear();
+            listarProducto(); // stock actualizado para la siguiente venta
             idX.setDetalleVenta(vdList);
             Comprobante comprobante = daoV.generarComprobante(idX);
             try {
