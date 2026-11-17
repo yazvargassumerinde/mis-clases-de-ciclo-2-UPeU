@@ -76,6 +76,18 @@ public class ProveedorController {
 
         tableViewHelper.addColumnsInOrderWithSize(tableView, columns, updateAction, deleteAction);
         tableView.setTableMenuButtonVisible(true);
+        // Pinta de azul las filas de proveedores con DNI
+        tableView.setRowFactory(tv -> new TableRow<Proveedor>() {
+            @Override
+            protected void updateItem(Proveedor item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!empty && item != null && "DNI".equalsIgnoreCase(item.getTipoDoc())) {
+                    setStyle("-fx-background-color: #cfe2ff;");   // azul
+                } else {
+                    setStyle("");
+                }
+            }
+        });
 
         txtFiltroDato.textProperty().addListener((obs, o, n) -> filtrarProveedores(n));
         lbnMsg.setText("");

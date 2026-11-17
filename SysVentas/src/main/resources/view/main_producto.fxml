@@ -12,7 +12,7 @@
          <children>
             <AnchorPane>
                <children>
-                  <Label layoutX="29.0" layoutY="14.0" text="Gestionar Producto" styleClass="titulo-pantalla" textFill="#7B1E2B">
+                  <Label layoutX="29.0" layoutY="14.0" text="Gestionar Producto" styleClass="titulo-pantalla" textFill="#0F1F47">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>

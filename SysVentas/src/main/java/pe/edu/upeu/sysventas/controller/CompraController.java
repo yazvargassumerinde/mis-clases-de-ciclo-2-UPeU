@@ -62,7 +62,7 @@ public class CompraController {
     @FXML
     public void initialize() {
         cbxTipoDoc.getItems().addAll("Factura", "Boleta", "Guia");
-        cbxTipoDoc.getSelectionModel().selectFirst();
+        cbxTipoDoc.getSelectionModel().select("Boleta");   // por defecto: Boleta
         dpFechaComp.setValue(LocalDate.now());
 
         // Proveedor: autocompletado con los proveedores del CRUD de Yerson
@@ -199,10 +199,15 @@ public class CompraController {
             mensaje("No hay productos en el carrito", true);
             return;
         }
+        // Si no eligen tipo, se guarda como Boleta
+        String tipo = cbxTipoDoc.getValue() == null ? "Boleta" : cbxTipoDoc.getValue();
+        // Si dejan vacía la serie o el número, se generan solos (ej: B001 - 00000005)
         String serie = txtSerie.getText().trim();
         String numero = txtNumDoc.getText().trim();
-        if (serie.isEmpty() || serie.length() > 10 || numero.isEmpty() || numero.length() > 12) {
-            mensaje("Ingrese la serie (máx. 10) y el número (máx. 12) de la factura del proveedor", true);
+        if (serie.isEmpty()) serie = tipo.substring(0, 1).toUpperCase() + "001";
+        if (numero.isEmpty()) numero = String.format("%08d", compS.finAll().size() + 1);
+        if (serie.length() > 10 || numero.length() > 12) {
+            mensaje("La serie es de máx. 10 caracteres y el número de máx. 12", true);
             return;
         }
         try {
@@ -214,7 +219,7 @@ public class CompraController {
                     .precioTotal(Double.parseDouble(txtImporteT.getText()))
                     .serie(serie)
                     .numDoc(numero)
-                    .tipoDoc(cbxTipoDoc.getValue())
+                    .tipoDoc(tipo)
                     .fechaComp(dpFechaComp.getValue() == null ? LocalDate.now() : dpFechaComp.getValue())
                     .fechaReg(LocalDate.now())
                     .build();
@@ -239,7 +244,9 @@ public class CompraController {
             txtNumDoc.clear();
             Stage stage = (Stage) miContenedor.getScene().getWindow();
             Toast.showToast(stage, "Compra registrada. El stock se actualizó.", 2500, stage.getWidth() / 1.5, stage.getHeight() / 2);
-            mensaje("Compra N° " + guardada.getId() + " registrada: S/ " + guardada.getPrecioTotal(), false);
+            mensaje(tipo + " " + serie + "-" + numero + " registrada · Compra N° " + guardada.getId()
+                    + " · Total S/ " + String.format("%.2f", guardada.getPrecioTotal()), false);
+            cbxTipoDoc.getSelectionModel().select("Boleta");
         } catch (Exception e) {
             mensaje("No se pudo registrar la compra: " + e.getMessage(), true);
         }

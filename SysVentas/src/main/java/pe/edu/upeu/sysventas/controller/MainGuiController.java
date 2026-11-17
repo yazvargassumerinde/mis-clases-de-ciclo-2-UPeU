@@ -61,7 +61,7 @@ public class MainGuiController {
     @FXML private Menu menuEstilo = new Menu("Cambiar Estilo");
     ComboBox<String> comboBoxEstilo = new ComboBox<>(
             FXCollections.observableArrayList(
-                    "Estilo Van Gogh", "Estilo Navideño", "Estilo por Defecto", "Estilo Oscuro",
+                    "Estilo Noche Estrellada", "Estilo Navideño", "Estilo por Defecto", "Estilo Oscuro",
                     "Estilo Azul", "Estilo Verde", "Estilo Rosado"));
     CustomMenuItem customItem = new CustomMenuItem(comboBoxEstilo);
     @FXML private Menu menuIdioma = new Menu("Idioma");
@@ -93,19 +93,19 @@ public class MainGuiController {
             Button b = new Button(m.getMenuitemnombre());
             b.getStyleClass().add("acceso-rapido");
             b.setTooltip(new Tooltip("Abrir " + m.getNombreTab()));
-            // Icono arriba del texto: vino normal, blanco al pasar el mouse
+            // Icono arriba del texto: azul normal, dorado al pasar el mouse
             String nombreIcono = m.getIdNombreObj().replaceFirst("^mi", "");   // producto, cliente, venta...
-            var urlVino = getClass().getResource("/img/ic-" + nombreIcono + "-vino.png");
-            var urlBlanco = getClass().getResource("/img/ic-" + nombreIcono + ".png");
-            if (urlVino != null && urlBlanco != null) {
-                Image icVino = new Image(urlVino.toExternalForm());
-                Image icBlanco = new Image(urlBlanco.toExternalForm());
-                ImageView iv = new ImageView(icVino);
+            var urlAzul = getClass().getResource("/img/ic-" + nombreIcono + "-azul.png");
+            var urlDorado = getClass().getResource("/img/ic-" + nombreIcono + "-dorado.png");
+            if (urlAzul != null && urlDorado != null) {
+                Image icAzul = new Image(urlAzul.toExternalForm());
+                Image icDorado = new Image(urlDorado.toExternalForm());
+                ImageView iv = new ImageView(icAzul);
                 iv.setFitWidth(26);
                 iv.setFitHeight(26);
                 b.setGraphic(iv);
                 b.setContentDisplay(ContentDisplay.TOP);
-                b.hoverProperty().addListener((obs, antes, encima) -> iv.setImage(encima ? icBlanco : icVino));
+                b.hoverProperty().addListener((obs, antes, encima) -> iv.setImage(encima ? icDorado : icAzul));
             }
             b.setOnAction(e -> abrirTab(m.getRutaFile(), m.getNombreTab()));
             panelAccesos.getChildren().add(b);
@@ -146,7 +146,7 @@ public class MainGuiController {
         Scene escena = bp.getScene();
         escena.getStylesheets().clear();
         switch (estiloSeleccionado) {
-            case "Estilo Van Gogh":
+            case "Estilo Noche Estrellada":
                 escena.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
                 escena.getStylesheets().add(getClass().getResource("/css/estilo-coolbox.css").toExternalForm()); break;
             case "Estilo Navideño":

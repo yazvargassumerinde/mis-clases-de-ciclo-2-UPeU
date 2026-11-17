@@ -53,9 +53,9 @@ public class ProductoController {
     private Validator validator;
     ObservableList<Producto> listarProducto;
     private static final double STOCK_MINIMO = 10;
-
     Producto formulario;
     Long idProductoCE = 0L;
+    Long idNuevo = 0L;   // id del último producto nuevo (se pinta de verde)
 
     private final ToltipCustom ttc=new ToltipCustom();
 
@@ -101,40 +101,24 @@ public class ProductoController {
 
         tableViewHelper.addColumnsInOrderWithSize(tableView, columns, updateAction, deleteAction);
         tableView.setTableMenuButtonVisible(true);
-
-
+        // Colores: verde = nuevo, rojo = stock menor a 10, azul = precio mayor a 1000
         tableView.setRowFactory(tv -> new TableRow<Producto>() {
             @Override
             protected void updateItem(Producto item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setStyle("");
-                } else if (item.getPu() != null && item.getPu() > 1000) {
-                    setStyle("-fx-background-color: #cfe2ff;");
-                } else {
-                    setStyle("");
-                }
-            }
-        });
-        tableView.setRowFactory(tv -> new TableRow<Producto>() {
-            @Override
-            protected void updateItem(Producto item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setStyle("");
+                } else if (item.getIdProducto() != null && item.getIdProducto().equals(idNuevo)) {
+                    setStyle("-fx-background-color: #d4edda;");   // verde: producto nuevo
                 } else if (item.getStock() != null && item.getStock() < STOCK_MINIMO) {
-                    setStyle("-fx-background-color: #f8d7da;");   // rojo
+                    setStyle("-fx-background-color: #f8d7da;");   // rojo: stock bajo
                 } else if (item.getPu() != null && item.getPu() > 1000) {
-                    setStyle("-fx-background-color: #cfe2ff;");   // azul
+                    setStyle("-fx-background-color: #cfe2ff;");   // azul: precio mayor a 1000
                 } else {
                     setStyle("");
                 }
             }
         });
-
-
-
-
         // Filtra la tabla por nombre mientras se escribe
         txtFiltroDato.textProperty().addListener((obs, o, n) -> {
             String t = n == null ? "" : n.toLowerCase().trim();
@@ -309,7 +293,12 @@ public class ProductoController {
                 ps.save(formulario);
                 Toast.showToast(stage, "Se guardó correctamente!!", 2000, w, h);
             }
+            boolean esNuevo = idProductoCE == 0L;
             clearForm(); listar();
+            if (esNuevo) {
+                idNuevo = listarProducto.stream().mapToLong(Producto::getIdProducto).max().orElse(0L);
+                tableView.refresh();
+            }
         } catch (Exception ex) {
             // Antes, si algo fallaba, no se mostraba nada. Ahora se avisa en pantalla.
             lbnMsg.setText("No se pudo guardar: " + ex.getMessage());
