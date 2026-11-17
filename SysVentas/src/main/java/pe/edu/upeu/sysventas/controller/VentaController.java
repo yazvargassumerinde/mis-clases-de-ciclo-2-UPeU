@@ -116,6 +116,7 @@ public class VentaController {
         personalizarTabla();
         btnRegCarrito.setDisable(true);
         btnRegCliente.setDisable(true);
+        cantidadPro.textProperty().addListener((obs, antes, ahora) -> calcularPT());
     }
 
     public void listarProducto(){
@@ -134,6 +135,7 @@ public class VentaController {
                 System.out.println(lastCliente.getNameDysplay());
                 razonSocial.setText(lastCliente.getNameDysplay());
                 dniRuc.setText(lastCliente.getIdx());
+                try { txtDireccion.setText(cs.findById(lastCliente.getIdx()).getDireccion()); } catch (Exception ignored) {}
                 listar();
             }else {
                 btnRegCliente.setDisable(true);
@@ -152,9 +154,14 @@ public class VentaController {
         double with=stage.getMaxWidth()/2;
         if(autocompCliente.getText().length()==8 || autocompCliente.getText().length()==11){
             try {
-                if(cs.findById(autocompCliente.getText())!=null){
+                Cliente encontrado = cs.findById(autocompCliente.getText());
+                if(encontrado!=null){
                     btnRegCliente.setDisable(true);
-                    Toast.showToast(stage, "El cliente si existe", 2000, with, 50);
+                    dniRuc.setText(encontrado.getDniruc());
+                    razonSocial.setText(encontrado.getNombres());
+                    txtDireccion.setText(encontrado.getDireccion());
+                    listar();
+                    Toast.showToast(stage, "Cliente encontrado: " + encontrado.getNombres(), 2000, with, 50);
                     return;}
                 consultarDNIReniec(with);
             } catch (ModelNotFoundException e) {
@@ -265,15 +272,14 @@ public class VentaController {
 
     @FXML
     private void calcularPT(){
-        if(!cantidadPro.getText().equals("")){
-            double dato=Double.parseDouble(punitPro.getText())*Double.parseDouble(cantidadPro.getText());
-            preTPro.setText(String.valueOf(dato));
-            if(Double.parseDouble(cantidadPro.getText())>0.0){
-                btnRegCarrito.setDisable(false);
-            }else{
-                btnRegCarrito.setDisable(true);
-            }
-        }else{
+        try {
+            double cantidad = Double.parseDouble(cantidadPro.getText().trim());
+            double precio = Double.parseDouble(punitPro.getText().trim());
+            preTPro.setText(String.format(java.util.Locale.US, "%.2f", cantidad * precio));
+            btnRegCarrito.setDisable(cantidad <= 0);
+        } catch (Exception e) {
+            // cantidad vacía, con letras, o todavía no se eligió producto
+            preTPro.clear();
             btnRegCarrito.setDisable(true);
         }
     }
@@ -282,6 +288,15 @@ public class VentaController {
     @FXML
     private void registarPCarrito(){
         System.out.println("ID:"+SessionManager.getInstance().getUserId());
+        Stage stMsg = StageManager.getPrimaryStage();
+        if (dniRuc.getText() == null || dniRuc.getText().isBlank()) {
+            Toast.showToast(stMsg, "Primero elige un cliente de la lista o búscalo por DNI/RUC", 2500, stMsg.getMaxWidth() / 2, 50);
+            return;
+        }
+        if (codigoPro.getText() == null || codigoPro.getText().isBlank()) {
+            Toast.showToast(stMsg, "Primero elige un producto de la lista", 2500, stMsg.getMaxWidth() / 2, 50);
+            return;
+        }
         // Control de stock: no se puede vender más de lo que hay
         try {
             double cantidad = Double.parseDouble(cantidadPro.getText());
@@ -327,7 +342,7 @@ public class VentaController {
                     .precioTotal(Double.parseDouble(txtImporteT.getText()))
                     .idUsuario(daoU.findById(SessionManager.getInstance().getUserId()))
                     .serie("V")
-                    .tipoDoc("Factura")
+                    .tipoDoc("Boleta")
                     .fechaGener(LocalDate.parse(fechaFormateada, formatter))
                     .numDoc("00" )
                     .build();

@@ -10,28 +10,28 @@
       >
 
     <!-- Barra de herramientas-->
-    <ToolBar >
-        <Label text="Comprobante de Pago"/>
+    <ToolBar style="-fx-background-color: #0F1F47; -fx-padding: 8 12;">
+        <Label text="Comprobante de Pago · Coolbox" style="-fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold;"/>
         <Region HBox.hgrow="ALWAYS"/>
 
         <Button fx:id="btnImprimir"
                 text="🖨  Imprimir"
                 onAction="#onImprimir"
-                style="-fx-background-color: #7f8c8d; -fx-text-fill: white;
-                       -fx-padding: 6 14; -fx-cursor: hand;"/>
+                style="-fx-background-color: #1E3A8A; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-background-radius: 6; -fx-padding: 6 14; -fx-cursor: hand;"/>
 
         <Button fx:id="btnExportarPdf"
                 text="⬇  Exportar PDF"
                 onAction="#onExportarPdf"
-                style="-fx-background-color: #e74c3c; -fx-text-fill: white;
-                       -fx-font-weight: bold; -fx-padding: 6 14; -fx-cursor: hand;"/>
+                style="-fx-background-color: #E8B923; -fx-text-fill: #0A0D14;
+                       -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 6 14; -fx-cursor: hand;"/>
     </ToolBar>
 
     <!--Visor: ScrollPane con fondo gris, contenido inyectado por código-->
     <ScrollPane fx:id="scrollVisor"
                 fitToWidth="true"
                 VBox.vgrow="ALWAYS"
-                style="-fx-background-color: #e0e0e0;"/>
+                style="-fx-background-color: #E6E9F2;"/>
 
 
 

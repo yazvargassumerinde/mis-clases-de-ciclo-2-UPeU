@@ -59,7 +59,8 @@ public class VentaServiceImp extends CrudGenericoServiceImp<Venta, Long>
 
         b.setTipoDocumento("BOLETA DE VENTA ELECTRÓNICA");
         b.setSerie("B001");
-        b.setNumero("00000042");
+        // Número correlativo según el id de la venta (ej: venta 7 -> 00000007)
+        b.setNumero(venta.getId() != null ? String.format("%08d", venta.getId()) : "00000001");
         b.setFechaEmision(venta.getFechaGener().toString());
         b.setMoneda("PEN");
 
@@ -71,7 +72,8 @@ public class VentaServiceImp extends CrudGenericoServiceImp<Venta, Long>
         List<ItemComprobante> items = new ArrayList<>();
 
         for (VentaDetalle vd : venta.getDetalleVenta()) {
-            items.add(new ItemComprobante(vd.getIdProducto().getNombre(), vd.getCantidad(), new BigDecimal(vd.getSubtotal())));
+            // Se pasa el precio unitario (antes se pasaba el subtotal y se multiplicaba dos veces por la cantidad)
+            items.add(new ItemComprobante(vd.getIdProducto().getNombre(), vd.getCantidad(), BigDecimal.valueOf(vd.getPu())));
         }
         b.setItems(items);
         // Calcular totales

@@ -6,6 +6,7 @@ import javafx.geometry.Side;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 
@@ -44,9 +45,13 @@ public class AutoCompleteTextField<T>{
                     MenuItem item = new MenuItem(entry.toString());
                     //vbox.getChildren().add(new Button(item.getText()));
                     item.setOnAction(e -> {
+                        lastSelectedObject = entry;   // primero se guarda lo elegido
                         this.autoCompleteTextField.setText(entry.toString());
-                        lastSelectedObject = entry;
                         entryMenu.hide();
+                        // Avisa al controlador (Venta/Compra) para que llene los datos,
+                        // aunque se haya elegido con el mouse y no con el teclado
+                        this.autoCompleteTextField.fireEvent(new KeyEvent(KeyEvent.KEY_RELEASED,
+                                "", "", KeyCode.UNDEFINED, false, false, false, false));
                     });
 
                     menuItems.add(item);
