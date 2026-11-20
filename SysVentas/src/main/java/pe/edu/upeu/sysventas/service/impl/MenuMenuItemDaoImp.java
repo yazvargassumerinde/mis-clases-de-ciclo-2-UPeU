@@ -25,6 +25,8 @@ public class MenuMenuItemDaoImp implements IMenuMenuItemDao {
                 "Compra", "Reg. Proveedor", "Gestionar Proveedores", "T"));
         lista.add(new MenuMenuItenTO("micompra", "/view/main_compra.fxml",
                 "Compra", "Reg. Compra", "Gestionar Compras", "T"));
+        lista.add(new MenuMenuItenTO("mireporte", "/view/main_reporte.fxml",
+                "Reporte", "Reportes PDF", "Reportes", "T"));
 
         List<MenuMenuItenTO> accesoReal = new ArrayList<>();
 
@@ -37,6 +39,7 @@ public class MenuMenuItemDaoImp implements IMenuMenuItemDao {
                 accesoReal.add(lista.get(3)); // miventa (el administrador también vende)
                 accesoReal.add(lista.get(4)); // miproveedor
                 accesoReal.add(lista.get(5)); // micompra (Yoseth)
+                accesoReal.add(lista.get(6)); // mireporte (Sesión 16)
                 break;
             case "Root":
                 accesoReal = lista;
@@ -44,6 +47,7 @@ public class MenuMenuItemDaoImp implements IMenuMenuItemDao {
             case "Reporte":
                 accesoReal.add(lista.get(1)); // miproducto (consulta de productos y stock)
                 accesoReal.add(lista.get(2)); // micliente
+                accesoReal.add(lista.get(6)); // mireporte (Sesión 16)
                 break;
             case "Proveedor":
                 accesoReal.add(lista.get(4)); // miproveedor (CRUD de Yerson)

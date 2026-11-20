@@ -57,6 +57,7 @@ public class AppContext {
 
         // Promociones (banner de la pantalla de inicio)
         registrar(PromocionRepository.class, new PromocionRepository());
+        registrar(ReporteRepository.class, new ReporteRepository());
 
     }
 
@@ -86,6 +87,7 @@ public class AppContext {
         registrar(ICompraDetalleService.class, new CompraDetalleServiceImp(getBean(CompraDetalleRepository.class)));
 
         registrar(IPromocionService.class, new PromocionServiceImp(getBean(PromocionRepository.class)));
+        registrar(IReporteService.class, new ReporteServiceImp(getBean(ReporteRepository.class)));
 
     }
 
@@ -131,6 +133,7 @@ public class AppContext {
                         getBean(IUsuarioService.class),
                         getBean(ICompraService.class),
                         getBean(ICompraDetalleService.class)));
+        registrar(ReporteController.class, new ReporteController(getBean(IReporteService.class)));
 
     }
 

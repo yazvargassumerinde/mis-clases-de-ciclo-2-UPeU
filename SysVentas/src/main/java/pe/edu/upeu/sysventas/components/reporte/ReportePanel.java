@@ -38,7 +38,7 @@ public class ReportePanel extends BorderPane {
     private final PdfVisorPane visor = new PdfVisorPane();
     private final Button btnGenerar = new Button("▶  Generar");
     private final Button btnGuardar = new Button("⬇  Guardar PDF");
-    private final Button btnImprimir = new Button("🖨  Imprimir");
+    private final Button btnImprimir = new Button("Imprimir");
     private final Label lblEstado = new Label();
     private final ProgressIndicator progreso = new ProgressIndicator();
 
@@ -67,9 +67,9 @@ public class ReportePanel extends BorderPane {
         selector.setVisible(reportes.size() > 1);
         selector.setManaged(reportes.size() > 1);
 
-        estilizar(btnGenerar, "#27ae60");
-        estilizar(btnGuardar, "#e74c3c");
-        estilizar(btnImprimir, "#7f8c8d");
+        estilizar(btnGenerar, "#E30613");   // colores Coolbox
+        estilizar(btnGuardar, "#1A1A1A");
+        estilizar(btnImprimir, "#555555");
         btnGuardar.setDisable(true);
         btnImprimir.setDisable(true);
         btnGenerar.setDefaultButton(true);
@@ -87,7 +87,7 @@ public class ReportePanel extends BorderPane {
         zonaFiltros.setAlignment(Pos.BOTTOM_LEFT);
         VBox superior = new VBox(10, selector, zonaFiltros, acciones);
         superior.setPadding(new Insets(10, 12, 10, 12));
-        superior.setStyle("-fx-background-color: -fx-base; -fx-border-color: derive(-fx-base,-15%); -fx-border-width: 0 0 1 0;");
+        superior.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #E3E3E3; -fx-border-width: 0 0 1 0;");
 
         setTop(superior);
         setCenter(visor);
@@ -269,7 +269,7 @@ public class ReportePanel extends BorderPane {
     }
 
     private static void estilizar(Button b, String color) {
-        b.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 14; -fx-cursor: hand;");
+        b.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 7 16; -fx-background-radius: 6; -fx-cursor: hand;");
     }
 
     private void alerta(Alert.AlertType tipo, String cabecera, String detalle) {
