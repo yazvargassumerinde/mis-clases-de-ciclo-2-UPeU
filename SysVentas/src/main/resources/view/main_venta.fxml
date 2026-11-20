@@ -9,18 +9,18 @@
    <children>
       <VBox AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="24.0" AnchorPane.rightAnchor="24.0" AnchorPane.topAnchor="16.0" spacing="14.0">
          <children>
-            <VBox spacing="2.0">
+            <VBox spacing="2.0" minHeight="-Infinity">
                <children>
                   <Label styleClass="migas" text="Inicio  ›  Ventas"/>
                   <Label styleClass="titulo-pantalla" text="Registrar venta"/>
                </children>
             </VBox>
-            <AnchorPane styleClass="tarjeta">
+            <AnchorPane styleClass="tarjeta" minHeight="-Infinity">
                <children>
-                  <GridPane layoutX="14.0" layoutY="14.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                  <GridPane layoutX="14.0" layoutY="14.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" minHeight="-Infinity">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="123.0" minWidth="10.0" prefWidth="123.0"/>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="77.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="140.0" minWidth="10.0" prefWidth="115.0"/>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="10.0" prefWidth="96.0"/>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="211.0" minWidth="10.0" prefWidth="181.0"/>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="227.0" minWidth="10.0" prefWidth="226.0"/>
@@ -78,7 +78,7 @@
                               <Insets left="5.0"/>
                            </GridPane.margin>
                         </TextField>
-                        <Button fx:id="btnRegCliente" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#guardarCliente" text="Add" GridPane.columnIndex="5" GridPane.rowSpan="2147483647">
+                        <Button fx:id="btnRegCliente" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#guardarCliente" text="Nuevo" GridPane.columnIndex="5" GridPane.rowSpan="2147483647">
                            <graphic>
                               <ImageView fitHeight="18.0" fitWidth="18.0" preserveRatio="true">
                                  <image>
@@ -87,7 +87,7 @@
                               </ImageView>
                            </graphic>
                            <tooltip>
-                              <Tooltip text="Registra un cliente nuevo"/>
+                              <Tooltip text="Registra un cliente nuevo (si ya existe, te avisa)"/>
                            </tooltip>
                            <GridPane.margin>
                               <Insets left="5.0" right="5.0"/>
@@ -100,9 +100,9 @@
                   </GridPane>
                </children>
             </AnchorPane>
-            <AnchorPane styleClass="tarjeta">
+            <AnchorPane styleClass="tarjeta" minHeight="-Infinity">
                <children>
-                  <GridPane layoutX="14.0" layoutY="14.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                  <GridPane layoutX="14.0" layoutY="14.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" minHeight="-Infinity">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="203.0" minWidth="10.0" prefWidth="203.0"/>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="207.0" minWidth="10.0" prefWidth="151.0"/>
@@ -199,7 +199,7 @@
                   </GridPane>
                </children>
             </AnchorPane>
-            <AnchorPane styleClass="tarjeta">
+            <AnchorPane styleClass="tarjeta" VBox.vgrow="ALWAYS" minHeight="220.0">
                <children>
                   <TableView fx:id="tableView" layoutX="14.0" layoutY="14.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                      <padding>
@@ -214,9 +214,9 @@
                   <Insets right="5.0"/>
                </VBox.margin>
             </AnchorPane>
-            <AnchorPane styleClass="tarjeta">
+            <AnchorPane styleClass="tarjeta" minHeight="-Infinity">
                <children>
-                  <GridPane layoutX="14.0" layoutY="14.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                  <GridPane layoutX="14.0" layoutY="14.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" minHeight="-Infinity">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>

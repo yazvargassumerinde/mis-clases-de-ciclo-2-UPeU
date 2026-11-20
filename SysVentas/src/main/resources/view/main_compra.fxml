@@ -10,7 +10,7 @@
    <children>
       <VBox spacing="14.0" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="24.0" AnchorPane.rightAnchor="24.0" AnchorPane.topAnchor="16.0">
          <children>
-            <VBox spacing="2.0">
+            <VBox spacing="2.0" minHeight="-Infinity">
                <children>
                   <Label styleClass="migas" text="Inicio  ›  Compras"/>
                   <Label text="Registrar compra a proveedor" styleClass="titulo-pantalla">
@@ -21,7 +21,7 @@
                </children>
             </VBox>
             <!-- Datos del proveedor y de la factura -->
-            <GridPane hgap="6.0" vgap="2.0" styleClass="tarjeta">
+            <GridPane hgap="6.0" vgap="2.0" styleClass="tarjeta" minHeight="-Infinity">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" prefWidth="170.0"/>
                   <ColumnConstraints hgrow="SOMETIMES" prefWidth="120.0"/>
@@ -53,7 +53,7 @@
                </children>
             </GridPane>
             <!-- Producto que se compra -->
-            <GridPane hgap="6.0" vgap="2.0" styleClass="tarjeta">
+            <GridPane hgap="6.0" vgap="2.0" styleClass="tarjeta" minHeight="-Infinity">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" prefWidth="170.0"/>
                   <ColumnConstraints hgrow="SOMETIMES" prefWidth="200.0"/>
@@ -98,13 +98,13 @@
                </children>
             </GridPane>
             <!-- Carrito de compra -->
-            <TableView fx:id="tableView" prefHeight="260.0" VBox.vgrow="ALWAYS">
+            <TableView fx:id="tableView" prefHeight="260.0" VBox.vgrow="ALWAYS" minHeight="220.0">
                <placeholder>
                   <Label styleClass="tabla-vacia" text="Aún no hay registros. Usa el formulario para agregar uno."/>
                </placeholder>
             </TableView>
             <!-- Totales -->
-            <GridPane hgap="6.0" vgap="2.0" styleClass="tarjeta">
+            <GridPane hgap="6.0" vgap="2.0" styleClass="tarjeta" minHeight="-Infinity">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" prefWidth="160.0"/>
                   <ColumnConstraints hgrow="SOMETIMES" prefWidth="160.0"/>
@@ -136,7 +136,7 @@
                   </Button>
                </children>
             </GridPane>
-            <Label fx:id="lbnMsg" maxWidth="1.7976931348623157E308" text=""/>
+            <Label fx:id="lbnMsg" maxWidth="1.7976931348623157E308" text="" minHeight="-Infinity"/>
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>

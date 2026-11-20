@@ -10,7 +10,7 @@
    <children>
       <VBox AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="24.0" AnchorPane.rightAnchor="24.0" AnchorPane.topAnchor="16.0" spacing="14.0">
          <children>
-            <HBox alignment="CENTER_LEFT" spacing="16.0">
+            <HBox alignment="CENTER_LEFT" spacing="16.0" minHeight="-Infinity">
                <children>
                   <VBox spacing="2.0">
                      <children>
@@ -35,9 +35,9 @@
                <children>
                   <HBox layoutX="14.0" layoutY="14.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" spacing="16.0">
                      <children>
-                        <AnchorPane styleClass="tarjeta">
+                        <AnchorPane styleClass="tarjeta" minHeight="-Infinity">
                            <children>
-                              <GridPane hgap="5.0" vgap="5.0" AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                              <GridPane hgap="5.0" vgap="5.0" AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" minHeight="-Infinity">
                                  <columnConstraints>
                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="110.0"/>
                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="110.0"/>
