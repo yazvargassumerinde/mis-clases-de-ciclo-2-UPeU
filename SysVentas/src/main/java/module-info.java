@@ -18,6 +18,7 @@ module pe.edu.upeu.sysventas {
     requires java.desktop;
     requires escpos.coffee;
     requires com.github.librepdf.openpdf;
+    requires org.apache.pdfbox;
 
 
     opens pe.edu.upeu.sysventas to javafx.fxml;

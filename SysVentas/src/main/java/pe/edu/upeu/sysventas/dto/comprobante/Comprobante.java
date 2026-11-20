@@ -20,6 +20,8 @@ public class Comprobante {
     private String numero;          // 00000123
     private String fechaEmision;    // dd/MM/yyyy
     private String moneda = "PEN";  // PEN = Soles
+    private String hora;            // HH:mm:ss
+    private String cajero;          // usuario que registró la venta
 
     // Cliente
     private String tipoDocCliente;  // DNI, RUC, CE
@@ -34,6 +36,7 @@ public class Comprobante {
     private BigDecimal opGravadas;   // base imponible
     private BigDecimal igv;          // 18%
     private BigDecimal total;
+    private BigDecimal totalDescuento = BigDecimal.ZERO;   // ahorro total por promociones
 
     // QR (opcional)
     private String qrBase64;         // imagen QR en base64 para incrustar en HTML

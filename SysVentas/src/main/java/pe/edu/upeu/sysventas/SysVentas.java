@@ -22,8 +22,8 @@ public class SysVentas extends Application {
         fxmlLoader.setControllerFactory(appContext::getBean);
         Scene scene = new Scene(fxmlLoader.load());
         scene.getStylesheets().add(SysVentas.class.getResource("/css/style.css").toExternalForm());
-        scene.getStylesheets().add(SysVentas.class.getResource("/css/estilo-coolbox.css").toExternalForm());
-        stage.setTitle("Coolbox - Login");
+        scene.getStylesheets().add(SysVentas.class.getResource("/css/estilo-tienda.css").toExternalForm());
+        stage.setTitle("Coolbox - Iniciar sesión");
         stage.setResizable(false);
         stage.setScene(scene);
         stage.show();

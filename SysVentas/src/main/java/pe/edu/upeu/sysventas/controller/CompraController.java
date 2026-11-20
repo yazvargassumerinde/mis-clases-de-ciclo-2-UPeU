@@ -177,15 +177,10 @@ public class CompraController {
     }
 
     public void eliminarDelCarrito(CompCarrito obj) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmación");
-        alert.setHeaderText("Quitar producto del carrito");
-        alert.setContentText("¿Desea quitar " + obj.getNombreProducto() + "?");
-        Optional<ButtonType> r = alert.showAndWait();
-        if (r.isPresent() && r.get() == ButtonType.OK) {
-            carS.delete(obj.getIdCompcarrito());
-            listar();
-        }
+        // La confirmación ya la pide la tabla (TableViewHelper) antes de llamar a este método
+        carS.delete(obj.getIdCompcarrito());
+        listar();
+        mensaje("Producto quitado de la compra", false);
     }
 
     @FXML

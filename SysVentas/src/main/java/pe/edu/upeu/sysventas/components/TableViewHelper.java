@@ -1,7 +1,12 @@
 package pe.edu.upeu.sysventas.components;
 
+import java.util.Optional;
+
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -80,6 +85,11 @@ public class TableViewHelper<T> {
 
 
                     {
+                        // Estilo de botón de acción (blanco con borde) y ayuda al pasar el mouse
+                        btnUpdate.getStyleClass().add("btn-accion");
+                        btnDelete.getStyleClass().add("btn-accion");
+                        btnUpdate.setTooltip(new Tooltip("Editar este registro"));
+                        btnDelete.setTooltip(new Tooltip("Eliminar este registro"));
                         btnUpdate.setOnAction(event -> {
                             T data = getTableView().getItems().get(getIndex());
                             updateAction.accept(data);  // Llama a la función pasada como parámetro para actualizar
@@ -87,7 +97,18 @@ public class TableViewHelper<T> {
 
                         btnDelete.setOnAction(event -> {
                             T data = getTableView().getItems().get(getIndex());
-                            deleteAction.accept(data);  // Llama a la función pasada como parámetro para eliminar
+                            // Se pide confirmación antes de eliminar
+                            Alert confirmar = new Alert(Alert.AlertType.CONFIRMATION);
+                            confirmar.setTitle("Coolbox");
+                            confirmar.setHeaderText("¿Eliminar este registro?");
+                            confirmar.setContentText("Esta acción no se puede deshacer.");
+                            if (getScene() != null && getScene().getWindow() != null) {
+                                confirmar.initOwner(getScene().getWindow());
+                            }
+                            Optional<ButtonType> respuesta = confirmar.showAndWait();
+                            if (respuesta.isPresent() && respuesta.get() == ButtonType.OK) {
+                                deleteAction.accept(data);  // Llama a la función pasada como parámetro para eliminar
+                            }
                         });
                     }
 

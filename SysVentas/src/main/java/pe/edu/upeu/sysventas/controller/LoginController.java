@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Screen;
@@ -58,6 +59,18 @@ public class LoginController {
         Toast.showToast(stage, msg, 2000, w, h);
     }
 
+    /** Enlace "¿Olvidaste tu contraseña?": la clave está encriptada y no se puede leer. */
+    @FXML
+    public void olvideClave(ActionEvent e){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Coolbox");
+        alert.setHeaderText("¿Olvidaste tu contraseña?");
+        alert.setContentText("Por seguridad las claves se guardan encriptadas con SHA-256 y no se pueden ver ni recuperar.\n"
+                + "Pide al administrador de la tienda que te asigne una clave nueva.");
+        alert.initOwner(((Node) e.getSource()).getScene().getWindow());
+        alert.showAndWait();
+    }
+
     @FXML
     public void logout(){
         // Primero se cierra la base de datos y luego el programa
@@ -80,7 +93,7 @@ public class LoginController {
             fxmlLoader.setControllerFactory(appContext::getBean);
             Scene scene = new Scene(fxmlLoader.load(),rectangle2D.getWidth(),rectangle2D.getHeight());
             scene.getStylesheets().add(SysVentas.class.getResource("/css/style.css").toExternalForm());
-            scene.getStylesheets().add(SysVentas.class.getResource("/css/estilo-coolbox.css").toExternalForm());
+            scene.getStylesheets().add(SysVentas.class.getResource("/css/estilo-tienda.css").toExternalForm());
             Stage stage = (Stage) ((Node)e.getSource()).getScene().getWindow();
             StageManager.setPrimaryStage(stage);
             stage.setTitle("Coolbox");

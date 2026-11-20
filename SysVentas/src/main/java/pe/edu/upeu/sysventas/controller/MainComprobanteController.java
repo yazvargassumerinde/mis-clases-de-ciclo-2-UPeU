@@ -56,7 +56,7 @@ public class MainComprobanteController {
 
             // Centrar la boleta en el ScrollPane con fondo gris
             VBox wrapper = new VBox(vistaActual);
-            wrapper.setStyle("-fx-background-color: #E6E9F2; -fx-padding: 16;");
+            wrapper.setStyle("-fx-background-color: #F2F2F2; -fx-padding: 16;");
             wrapper.setAlignment(javafx.geometry.Pos.TOP_CENTER);
 
             scrollVisor.setContent(wrapper);

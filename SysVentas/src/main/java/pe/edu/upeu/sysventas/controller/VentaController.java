@@ -23,6 +23,7 @@ import pe.edu.upeu.sysventas.enums.TipoDocumento;
 import pe.edu.upeu.sysventas.enums.TipoProducto;
 import pe.edu.upeu.sysventas.exception.ModelNotFoundException;
 import pe.edu.upeu.sysventas.model.Cliente;
+import pe.edu.upeu.sysventas.model.Producto;
 import pe.edu.upeu.sysventas.model.VentCarrito;
 import pe.edu.upeu.sysventas.model.Venta;
 import pe.edu.upeu.sysventas.model.VentaDetalle;
@@ -108,14 +109,17 @@ public class VentaController {
                 punitPro.setText(dato[0]);
                 stockPro.setText(dato[1]);
                 tipoProducto=TipoProducto.valueOf(dato[2]);
-
+                // Cantidad 1 por defecto: así el botón Add del carrito se activa al instante
+                if (cantidadPro.getText() == null || cantidadPro.getText().isBlank()) {
+                    cantidadPro.setText("1");
+                }
+                calcularPT();
             }
         });
 
 
         personalizarTabla();
         btnRegCarrito.setDisable(true);
-        btnRegCliente.setDisable(true);
         cantidadPro.textProperty().addListener((obs, antes, ahora) -> calcularPT());
     }
 
@@ -138,7 +142,6 @@ public class VentaController {
                 try { txtDireccion.setText(cs.findById(lastCliente.getIdx()).getDireccion()); } catch (Exception ignored) {}
                 listar();
             }else {
-                btnRegCliente.setDisable(true);
                 limpiarFormCliente();
             }
         });
@@ -151,12 +154,11 @@ public class VentaController {
     public void buscarClienteCdni(){
         limpiarFormCliente();
         Stage stage = StageManager.getPrimaryStage();
-        double with=stage.getMaxWidth()/2;
+        double with=stage.getX() + stage.getWidth()/2 - 150;
         if(autocompCliente.getText().length()==8 || autocompCliente.getText().length()==11){
             try {
                 Cliente encontrado = cs.findById(autocompCliente.getText());
                 if(encontrado!=null){
-                    btnRegCliente.setDisable(true);
                     dniRuc.setText(encontrado.getDniruc());
                     razonSocial.setText(encontrado.getNombres());
                     txtDireccion.setText(encontrado.getDireccion());
@@ -165,28 +167,35 @@ public class VentaController {
                     return;}
                 consultarDNIReniec(with);
             } catch (ModelNotFoundException e) {
-                btnRegCliente.setDisable(true);
-                Toast.showToast(stage, "El cliente no existe", 2000, with, 50);
+                // No está registrado: se prepara para registrarlo con Add
                 consultarDNIReniec(with);
             }
         }else{
-            btnRegCliente.setDisable(true);
             Toast.showToast(stage, "El valor buscado debe tener 8 o 11 digitos", 2000, with, 50);
         }
     }
 
 
 
+    /**
+     * El cliente no está registrado: se intenta completar su nombre con RENIEC (solo DNI)
+     * y se activa el botón Add para registrarlo. Si no hay internet, se escribe el nombre a mano.
+     */
     public void consultarDNIReniec(double with){
-        PersonaDto p=cDni.consultarDNI(autocompCliente.getText());
-        if(p!=null){
-            razonSocial.setText(p.getNombre()+" "+p.getApellidoPaterno()+" "+p.getApellidoMaterno());
-            dniRuc.setText(p.getDni());
-            btnRegCliente.setDisable(false);
-            Toast.showToast(stage, "El cliente se encontró en RENIEC para registrar debe hacer clik en Add", 2000, with, 50);
-        }else{
-            btnRegCliente.setDisable(true);
-            Toast.showToast(stage, "El cliente no se encuentra en RENIEC y debe registrar a través del formulario de cliente", 2000, with, 50);
+        Stage st = StageManager.getPrimaryStage();
+        String doc = autocompCliente.getText().trim();
+        PersonaDto p = null;
+        if (doc.length() == 8) {
+            try { p = cDni.consultarDNI(doc); } catch (Exception ignored) { }
+        }
+        dniRuc.setText(doc);
+        if (p != null && p.getNombre() != null && !p.getNombre().isBlank()) {
+            razonSocial.setText(p.getNombre() + " " + p.getApellidoPaterno() + " " + p.getApellidoMaterno());
+            Toast.showToast(st, "Cliente encontrado en RENIEC: completa la dirección y presiona Nuevo para registrarlo", 3000, with, 80);
+            txtDireccion.requestFocus();
+        } else {
+            Toast.showToast(st, "Cliente nuevo: escribe su nombre y dirección y presiona Nuevo para registrarlo", 3000, with, 80);
+            razonSocial.requestFocus();
         }
     }
 
@@ -200,16 +209,42 @@ public class VentaController {
     @FXML
     public void guardarCliente(){
         Stage stage = StageManager.getPrimaryStage();
-        double with=stage.getMaxWidth()/2;
+        double with=stage.getX() + stage.getWidth()/2 - 150;
+        String doc = dniRuc.getText() == null ? "" : dniRuc.getText().trim();
+        String nombre = razonSocial.getText() == null ? "" : razonSocial.getText().trim();
+        if (doc.isEmpty()) {
+            Toast.showToast(stage, "Escribe el DNI/RUC en el primer campo y presiona Buscar", 2500, with, 80);
+            autocompCliente.requestFocus();
+            return;
+        }
+        // Si el cliente ya existe no se vuelve a registrar: se avisa y se sigue con la venta
         try {
-            Cliente c= Cliente.builder().dniruc(dniRuc.getText())
-                    .nombres(razonSocial.getText())
-                    .repLegal(razonSocial.getText())
-                    .tipoDocumento(TipoDocumento.DNI)
+            Cliente existente = cs.findById(doc);
+            if (existente != null) {
+                Toast.showToast(stage, "Este cliente ya está registrado. Continúa eligiendo el producto.", 2500, with, 80);
+                autocompProducto.requestFocus();
+                return;
+            }
+        } catch (Exception noExiste) {
+            // no está registrado: se guarda abajo
+        }
+        if (!doc.matches("\\d{8}") && !doc.matches("\\d{11}")) {
+            Toast.showToast(stage, "El DNI debe tener 8 dígitos o el RUC 11 dígitos", 2500, with, 80);
+            return;
+        }
+        if (nombre.isEmpty()) {
+            Toast.showToast(stage, "Escribe el nombre o razón social del cliente", 2500, with, 80);
+            razonSocial.requestFocus();
+            return;
+        }
+        try {
+            Cliente c= Cliente.builder().dniruc(doc)
+                    .nombres(nombre)
+                    .repLegal(nombre)
+                    .tipoDocumento(doc.length() == 11 ? TipoDocumento.RUC : TipoDocumento.DNI)
                     .direccion(txtDireccion.getText())
                     .build();
             cs.save(c);
-            btnRegCliente.setDisable(true);
             Toast.showToast(stage, "El cliente se guardo satisfactoriamente!", 2000, with, 50);
             listarCliente();
             listar();
@@ -254,20 +289,13 @@ public class VentaController {
     }
 
     public void deleteReg(VentCarrito obj) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmación");
-        alert.setHeaderText("Confirmar acción");
-        alert.setContentText("¿Estás seguro de que deseas eliminar este elemento?");
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            daoC.delete(obj.getIdCarrito());
-            Stage stage = StageManager.getPrimaryStage();
-            double with=stage.getMaxWidth()/2;
-            Toast.showToast(stage, "¡Acción completada!", 2000, with, 50);
-            listar();
-        } else {
-            System.out.println("Acción cancelada");
+        // La confirmación ya la pide la tabla (TableViewHelper) antes de llamar a este método
+        daoC.delete(obj.getIdCarrito());
+        Stage stage = StageManager.getPrimaryStage();
+        if (stage != null) {
+            Toast.showToast(stage, "Producto quitado del carrito", 2000, stage.getWidth() / 2, 80);
         }
+        listar();
     }
 
     @FXML
@@ -290,11 +318,11 @@ public class VentaController {
         System.out.println("ID:"+SessionManager.getInstance().getUserId());
         Stage stMsg = StageManager.getPrimaryStage();
         if (dniRuc.getText() == null || dniRuc.getText().isBlank()) {
-            Toast.showToast(stMsg, "Primero elige un cliente de la lista o búscalo por DNI/RUC", 2500, stMsg.getMaxWidth() / 2, 50);
+            Toast.showToast(stMsg, "Primero elige un cliente de la lista o búscalo por DNI/RUC", 2500, stMsg.getX() + stMsg.getWidth() / 2 - 150, 50);
             return;
         }
         if (codigoPro.getText() == null || codigoPro.getText().isBlank()) {
-            Toast.showToast(stMsg, "Primero elige un producto de la lista", 2500, stMsg.getMaxWidth() / 2, 50);
+            Toast.showToast(stMsg, "Primero elige un producto de la lista", 2500, stMsg.getX() + stMsg.getWidth() / 2 - 150, 50);
             return;
         }
         // Control de stock: no se puede vender más de lo que hay
@@ -303,7 +331,7 @@ public class VentaController {
             double stock = Double.parseDouble(stockPro.getText());
             if (cantidad > stock) {
                 Stage st = StageManager.getPrimaryStage();
-                Toast.showToast(st, "Stock insuficiente: solo hay " + stock + " unidades", 2500, st.getMaxWidth() / 2, 50);
+                Toast.showToast(st, "Stock insuficiente: solo hay " + stock + " unidades", 2500, st.getX() + st.getWidth() / 2 - 150, 50);
                 return;
             }
         } catch (NumberFormatException ignored) {}
@@ -321,8 +349,15 @@ public class VentaController {
                     .build();
             daoC.save(ss);
             listar();
+            Toast.showToast(stMsg, "Producto agregado al carrito", 1800, stMsg.getX() + stMsg.getWidth() / 2 - 150, 80);
         }catch (Exception e){
-            System.out.println(e.getMessage());
+            // El error se muestra en una ventana para que se pueda leer con calma
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Coolbox");
+            alert.setHeaderText("No se pudo agregar el producto al carrito");
+            alert.setContentText(e.getMessage() != null ? e.getMessage() : e.toString());
+            alert.showAndWait();
         }
     }
 
@@ -351,11 +386,15 @@ public class VentaController {
             List<VentaDetalle> vdList = new ArrayList<>();
             if (idX.getId() != 0) {
                 for (VentCarrito car : dd) {
+                    Producto prodVenta = ps.findById(car.getIdProducto().getIdProducto());
+                    // Ahorro por promoción: (precio anterior - precio de venta) * cantidad
+                    double ahorro = (prodVenta.getPuold() != null && prodVenta.getPuold() > car.getPunitario())
+                            ? (prodVenta.getPuold() - car.getPunitario()) * car.getCantidad() : 0.0;
                     VentaDetalle vd = VentaDetalle.builder()
                             .idVenta(idX)
-                            .idProducto(ps.findById(car.getIdProducto().getIdProducto()))
+                            .idProducto(prodVenta)
                             .cantidad(car.getCantidad())
-                            .descuento(0.0)
+                            .descuento(Math.round(ahorro * 100.0) / 100.0)
                             .pu(car.getPunitario())
                             .subtotal(car.getPtotal())
                             .build();
@@ -377,7 +416,7 @@ public class VentaController {
                     print(Long.parseLong(String.valueOf(idX.getId())));
                 }else{
                     Stage stage = StageManager.getPrimaryStage();
-                    double with=stage.getMaxWidth()/2;
+                    double with=stage.getX() + stage.getWidth()/2 - 150;
                     Toast.showToast(stage, "Error al generar comprobante", 2000, with, 50);
                 }
             }catch (Exception e){
@@ -386,7 +425,7 @@ public class VentaController {
 
         }else{
             Stage stage = StageManager.getPrimaryStage();
-            double with=stage.getMaxWidth()/2;
+            double with=stage.getX() + stage.getWidth()/2 - 150;
             Toast.showToast(stage, "No hay productos en el carrito", 2000, with, 50);
         }
     }

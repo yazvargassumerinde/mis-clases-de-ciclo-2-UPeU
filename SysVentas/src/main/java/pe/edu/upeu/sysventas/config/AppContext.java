@@ -55,6 +55,9 @@ public class AppContext {
         registrar(CompraRepository.class, new CompraRepository());
         registrar(CompraDetalleRepository.class, new CompraDetalleRepository());
 
+        // Promociones (banner de la pantalla de inicio)
+        registrar(PromocionRepository.class, new PromocionRepository());
+
     }
 
     // CAPA 2 — SERVICIOS
@@ -82,6 +85,8 @@ public class AppContext {
         registrar(ICompraService.class, new CompraServiceImp(getBean(CompraRepository.class)));
         registrar(ICompraDetalleService.class, new CompraDetalleServiceImp(getBean(CompraDetalleRepository.class)));
 
+        registrar(IPromocionService.class, new PromocionServiceImp(getBean(PromocionRepository.class)));
+
     }
 
     // CAPA 3 — CONTROLADORES JavaFX
@@ -90,7 +95,11 @@ public class AppContext {
     private void registrarControladores() {
         //registrar(LoginController.class, new LoginController(getBean(IUsuarioService.class)));
         registrar(LoginController.class, new LoginController(getBean(IUsuarioService.class)));
-        registrar(MainGuiController.class,new MainGuiController(getBean(IMenuMenuItemDao.class)));
+        registrar(MainGuiController.class, new MainGuiController(
+                getBean(IMenuMenuItemDao.class),
+                getBean(IProductoService.class),
+                getBean(IPromocionService.class),
+                getBean(IVentaDetalleService.class)));
 
         registrar(ProductoController.class,
                 new ProductoController(

@@ -15,31 +15,32 @@ import javafx.scene.text.TextAlignment;
 import pe.edu.upeu.sysventas.dto.comprobante.Comprobante;
 import pe.edu.upeu.sysventas.dto.comprobante.ItemComprobante;
 
+import java.math.BigDecimal;
 import java.net.URL;
 
 /**
- * Boleta en pantalla con el estilo "La noche estrellada" de Coolbox:
- * azul noche, amarillo dorado, blanco y negro.
+ * Boleta en pantalla con el estilo de la tienda Coolbox (blanco, rojo y negro),
+ * ordenada como una boleta de venta electrónica y con el logo en la esquina.
  */
 public class ComprobanteView {
 
-    private static final Color AZUL_NOCHE = Color.web("#0F1F47");
-    private static final Color AZUL       = Color.web("#1E3A8A");
-    private static final Color DORADO     = Color.web("#E8B923");
-    private static final Color DORADO_OSC = Color.web("#B8860B");
-    private static final Color NEGRO      = Color.web("#0A0D14");
-    private static final Color GRIS       = Color.web("#6B7488");
-    private static final Color NIEBLA     = Color.web("#F3F6FC");
-    private static final Color LINEA      = Color.web("#C9D3EA");
+    private static final Color ROJO   = Color.web("#E30613");
+    private static final Color NEGRO  = Color.web("#1A1A1A");
+    private static final Color GRIS   = Color.web("#6B6B6B");
+    private static final Color CLARO  = Color.web("#F7F7F7");
+    private static final Color LINEA  = Color.web("#E3E3E3");
 
-    private static final double ANCHO = 702;   // 750 - 2 * 24 de margen
+    private static final double ANCHO = 694;   // 750 - 2 * 28 de margen
 
     private static final Font F_NORMAL  = Font.font("Segoe UI", 11);
     private static final Font F_BOLD    = Font.font("Segoe UI", FontWeight.BOLD, 11);
-    private static final Font F_TITULO  = Font.font("Georgia", FontWeight.BOLD, 22);
-    private static final Font F_DOC     = Font.font("Segoe UI", FontWeight.BOLD, 14);
+    private static final Font F_EMPRESA = Font.font("Segoe UI", FontWeight.BOLD, 22);
+    private static final Font F_DOC     = Font.font("Segoe UI", FontWeight.BOLD, 13);
+    private static final Font F_SERIE   = Font.font("Segoe UI", FontWeight.BOLD, 18);
     private static final Font F_SECCION = Font.font("Segoe UI", FontWeight.BOLD, 10);
-    private static final Font F_GRACIAS = Font.font("Georgia", FontPosture.ITALIC, 13);
+    private static final Font F_TOTAL   = Font.font("Segoe UI", FontWeight.BOLD, 14);
+    private static final Font F_GRACIAS = Font.font("Segoe UI", FontPosture.ITALIC, 13);
+    private static final Font F_PEQUE   = Font.font("Segoe UI", 9);
 
     private final Comprobante boleta;
 
@@ -49,14 +50,16 @@ public class ComprobanteView {
 
     public VBox construir() {
         VBox pagina = new VBox(14);
-        pagina.setStyle("-fx-background-color: white; -fx-border-color: #0F1F47; -fx-border-width: 1;");
-        pagina.setPadding(new Insets(0, 24, 20, 24));
+        pagina.setStyle("-fx-background-color: white; -fx-border-color: #E3E3E3; -fx-border-width: 1;");
+        pagina.setPadding(new Insets(0, 28, 22, 28));
         pagina.setMaxWidth(750);
         pagina.setMinWidth(750);
 
+        Rectangle franjaRoja = new Rectangle(ANCHO, 6, ROJO);
         pagina.getChildren().addAll(
-            franjaNocheEstrellada(96),
+            franjaRoja,
             seccionCabecera(),
+            lineaPunteada(),
             seccionCliente(),
             seccionItems(),
             seccionTotales(),
@@ -65,88 +68,87 @@ public class ComprobanteView {
         return pagina;
     }
 
-    // Pintura de remolinos arriba de la boleta
-    private Region franjaNocheEstrellada(double alto) {
-        StackPane franja = new StackPane();
-        franja.setPrefSize(ANCHO, alto);
-        franja.setMaxSize(ANCHO, alto);
-        URL url = getClass().getResource("/img/vg-boleta.png");
+    // Logo en la esquina + datos de la tienda + recuadro de la boleta
+    private HBox seccionCabecera() {
+        StackPane logo = new StackPane();
+        logo.setMinSize(68, 68);
+        logo.setPrefSize(68, 68);
+        URL url = getClass().getResource("/img/logo-coolbox.png");
         if (url != null) {
             ImageView iv = new ImageView(new Image(url.toExternalForm()));
-            iv.setFitWidth(ANCHO);
-            iv.setFitHeight(alto);
-            iv.setPreserveRatio(false);
-            franja.getChildren().add(iv);
-        } else {
-            franja.setStyle("-fx-background-color: #0F1F47;");
+            iv.setFitWidth(68);
+            iv.setFitHeight(68);
+            iv.setPreserveRatio(true);
+            logo.getChildren().add(iv);
         }
-        Rectangle lineaDorada = new Rectangle(ANCHO, 3, DORADO);
-        StackPane.setAlignment(lineaDorada, Pos.BOTTOM_CENTER);
-        franja.getChildren().add(lineaDorada);
-        VBox.setMargin(franja, new Insets(24, 0, 0, 0));
-        return franja;
-    }
 
-    private HBox seccionCabecera() {
-        Label nombre = lbl(boleta.getRazonSocial(), F_TITULO, AZUL_NOCHE);
-        nombre.setTextAlignment(TextAlignment.LEFT);
-        VBox emisor = new VBox(3,
-            nombre,
+        VBox emisor = new VBox(2,
+            lbl(boleta.getRazonSocial(), F_EMPRESA, NEGRO),
             lbl("RUC: " + boleta.getRucEmisor(), F_BOLD, NEGRO),
-            lbl(boleta.getDireccion() + " - " + boleta.getUbigeo(), F_NORMAL, GRIS),
+            lbl(boleta.getDireccion(), F_NORMAL, GRIS),
+            lbl(boleta.getUbigeo(), F_NORMAL, GRIS),
             lbl("Tel: " + boleta.getTelefono(), F_NORMAL, GRIS)
         );
         emisor.setAlignment(Pos.CENTER_LEFT);
-        emisor.setPrefWidth(410);
+
+        Region espacio = new Region();
+        HBox.setHgrow(espacio, Priority.ALWAYS);
 
         Label tipo = lbl(boleta.getTipoDocumento(), F_DOC, Color.WHITE);
         HBox bandaTipo = new HBox(tipo);
         bandaTipo.setAlignment(Pos.CENTER);
-        bandaTipo.setPadding(new Insets(6));
-        bandaTipo.setBackground(fondo(AZUL_NOCHE, 6, 6, 0, 0));
+        bandaTipo.setPadding(new Insets(7));
+        bandaTipo.setBackground(fondo(ROJO, 6, 6, 0, 0));
 
+        String hora = boleta.getHora() != null ? "   Hora: " + boleta.getHora() : "";
         VBox datosDoc = new VBox(3,
             lbl("R.U.C. " + boleta.getRucEmisor(), F_BOLD, NEGRO),
-            lbl(boleta.getSerie() + " - " + boleta.getNumero(), Font.font("Segoe UI", FontWeight.BOLD, 16), DORADO_OSC),
-            lbl("Fecha: " + boleta.getFechaEmision() + "  ·  Moneda: " + boleta.getMoneda(), F_NORMAL, GRIS)
+            lbl(boleta.getSerie() + " - " + boleta.getNumero(), F_SERIE, ROJO),
+            lbl("Fecha: " + boleta.getFechaEmision() + hora, F_NORMAL, GRIS)
         );
         datosDoc.setAlignment(Pos.CENTER);
         datosDoc.setPadding(new Insets(8));
 
         VBox docBox = new VBox(bandaTipo, datosDoc);
-        docBox.setPrefWidth(276);
-        docBox.setBorder(new Border(new BorderStroke(DORADO, BorderStrokeStyle.SOLID, new CornerRadii(8), new BorderWidths(2))));
+        docBox.setPrefWidth(260);
+        docBox.setMaxWidth(260);
+        docBox.setBorder(new Border(new BorderStroke(ROJO, BorderStrokeStyle.SOLID, new CornerRadii(8), new BorderWidths(2))));
         docBox.setBackground(fondo(Color.WHITE, 8, 8, 8, 8));
 
-        return new HBox(16, emisor, docBox);
+        HBox cabecera = new HBox(14, logo, emisor, espacio, docBox);
+        cabecera.setAlignment(Pos.CENTER_LEFT);
+        return cabecera;
     }
 
     private VBox seccionCliente() {
         GridPane grid = new GridPane();
-        grid.setBackground(fondo(NIEBLA, 8, 8, 8, 8));
+        grid.setBackground(fondo(CLARO, 8, 8, 8, 8));
         grid.setPadding(new Insets(6, 4, 6, 4));
-        agregarFilaGrid(grid, 0, boleta.getTipoDocCliente(), boleta.getNroDocCliente());
-        agregarFilaGrid(grid, 1, "Cliente", boleta.getNombreCliente());
-        agregarFilaGrid(grid, 2, "Dirección", boleta.getDireccionCliente());
+        grid.setHgap(4);
+        agregarDato(grid, 0, 0, boleta.getTipoDocCliente(), boleta.getNroDocCliente());
+        agregarDato(grid, 0, 2, "N° artículos", String.valueOf(numeroArticulos()));
+        agregarDato(grid, 1, 0, "Nombre", boleta.getNombreCliente());
+        agregarDato(grid, 1, 2, "Cajero", boleta.getCajero() != null ? boleta.getCajero() : "-");
+        agregarDato(grid, 2, 0, "Dirección", boleta.getDireccionCliente());
+        agregarDato(grid, 2, 2, "Moneda", "PEN".equals(boleta.getMoneda()) ? "Soles (PEN)" : boleta.getMoneda());
 
-        ColumnConstraints col1 = new ColumnConstraints(110);
-        ColumnConstraints col2 = new ColumnConstraints();
-        col2.setHgrow(Priority.ALWAYS);
-        grid.getColumnConstraints().addAll(col1, col2);
-
+        grid.getColumnConstraints().addAll(
+            new ColumnConstraints(90), new ColumnConstraints(330),
+            new ColumnConstraints(90), new ColumnConstraints(160));
         return new VBox(6, tituloSeccion("DATOS DEL CLIENTE"), grid);
     }
 
     private VBox seccionItems() {
         GridPane header = new GridPane();
-        header.setBackground(fondo(AZUL_NOCHE, 6, 6, 0, 0));
-        header.setBorder(new Border(new BorderStroke(DORADO, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 0, 2, 0))));
-        header.setPadding(new Insets(6, 8, 6, 8));
+        header.setBackground(fondo(NEGRO, 6, 6, 0, 0));
+        header.setPadding(new Insets(7, 8, 7, 8));
         header.addRow(0,
-            celda("CANT.", Color.WHITE, F_BOLD, 60, Pos.CENTER),
-            celda("DESCRIPCIÓN", Color.WHITE, F_BOLD, 386, Pos.CENTER_LEFT),
-            celda("P. UNIT", Color.WHITE, F_BOLD, 120, Pos.CENTER_RIGHT),
-            celda("SUBTOTAL", Color.WHITE, F_BOLD, 120, Pos.CENTER_RIGHT)
+            celda("COD.", Color.WHITE, F_BOLD, 50, Pos.CENTER_LEFT),
+            celda("CANT.", Color.WHITE, F_BOLD, 45, Pos.CENTER),
+            celda("DESCRIPCIÓN", Color.WHITE, F_BOLD, 300, Pos.CENTER_LEFT),
+            celda("P. UNIT", Color.WHITE, F_BOLD, 95, Pos.CENTER_RIGHT),
+            celda("DCTO.", Color.WHITE, F_BOLD, 80, Pos.CENTER_RIGHT),
+            celda("SUBTOTAL", Color.WHITE, F_BOLD, 95, Pos.CENTER_RIGHT)
         );
 
         VBox filas = new VBox(0);
@@ -155,12 +157,20 @@ public class ComprobanteView {
             ItemComprobante item = boleta.getItems().get(i);
             GridPane fila = new GridPane();
             fila.setPadding(new Insets(6, 8, 6, 8));
-            fila.setBackground(fondo(i % 2 == 0 ? Color.WHITE : NIEBLA, 0, 0, 0, 0));
+            fila.setBackground(fondo(i % 2 == 0 ? Color.WHITE : Color.web("#FAFAFA"), 0, 0, 0, 0));
+            boolean enPromo = item.getDescuento() != null && item.getDescuento().signum() > 0;
+            // Descripción: si está en promoción se agrega el precio de antes
+            String descripcion = item.getDescripcion();
+            if (enPromo && item.getPrecioAntes() != null) {
+                descripcion += "\nPromoción · Antes: S/ " + item.getPrecioAntes();
+            }
             fila.addRow(0,
-                celda(formatoCantidad(item.getCantidad()), NEGRO, F_NORMAL, 60, Pos.CENTER),
-                celda(item.getDescripcion(), NEGRO, F_NORMAL, 386, Pos.CENTER_LEFT),
-                celda("S/ " + item.getPrecioUnitario(), NEGRO, F_NORMAL, 120, Pos.CENTER_RIGHT),
-                celda("S/ " + item.getSubtotal(), NEGRO, F_BOLD, 120, Pos.CENTER_RIGHT)
+                celda(item.getCodigo() != null ? item.getCodigo() : "-", GRIS, F_NORMAL, 50, Pos.CENTER_LEFT),
+                celda(formatoCantidad(item.getCantidad()), NEGRO, F_NORMAL, 45, Pos.CENTER),
+                celda(descripcion, NEGRO, F_NORMAL, 300, Pos.CENTER_LEFT),
+                celda("S/ " + item.getPrecioUnitario(), NEGRO, F_NORMAL, 95, Pos.CENTER_RIGHT),
+                celda(enPromo ? "-S/ " + item.getDescuento() : "-", enPromo ? ROJO : GRIS, enPromo ? F_BOLD : F_NORMAL, 80, Pos.CENTER_RIGHT),
+                celda("S/ " + item.getSubtotal(), NEGRO, F_BOLD, 95, Pos.CENTER_RIGHT)
             );
             filas.getChildren().add(fila);
         }
@@ -168,31 +178,48 @@ public class ComprobanteView {
     }
 
     private HBox seccionTotales() {
-        Label letras = lbl(NumeroALetras.soles(boleta.getTotal()), F_BOLD, AZUL_NOCHE);
+        Label letras = lbl(NumeroALetras.soles(boleta.getTotal()), F_BOLD, NEGRO);
         letras.setTextAlignment(TextAlignment.LEFT);
-        VBox izq = new VBox(4, lbl("SON:", F_SECCION, DORADO_OSC), letras);
-        izq.setPadding(new Insets(10));
-        izq.setPrefWidth(380);
-        izq.setBackground(fondo(NIEBLA, 8, 8, 8, 8));
-        izq.setBorder(new Border(new BorderStroke(DORADO, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 0, 0, 3))));
+        VBox son = new VBox(4, lbl("SON:", F_SECCION, ROJO), letras);
+        son.setPadding(new Insets(10));
+        son.setBackground(fondo(CLARO, 8, 8, 8, 8));
+        son.setBorder(new Border(new BorderStroke(ROJO, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 0, 0, 3))));
 
+        Label gracias = lbl("¡Gracias por tu compra en Coolbox!", F_GRACIAS, NEGRO);
+        VBox izq = new VBox(10, son, gracias);
+        BigDecimal ahorro = boleta.getTotalDescuento() != null ? boleta.getTotalDescuento() : BigDecimal.ZERO;
+        if (ahorro.signum() > 0) {
+            Label ahorroLbl = lbl("¡Ahorraste S/ " + ahorro + " con las promociones Coolbox!", F_BOLD, Color.WHITE);
+            HBox caja = new HBox(ahorroLbl);
+            caja.setPadding(new Insets(6, 10, 6, 10));
+            caja.setBackground(fondo(ROJO, 6, 6, 6, 6));
+            caja.setMaxWidth(Region.USE_PREF_SIZE);
+            izq.getChildren().add(caja);
+        }
+        izq.setPrefWidth(340);
+
+        BigDecimal cero = BigDecimal.ZERO.setScale(2);
         VBox der = new VBox(
-            filaTotal("Op. Gravadas", boleta.getOpGravadas().toString(), false),
-            filaTotal("IGV (18%)", boleta.getIgv().toString(), false),
-            filaTotal("TOTAL", boleta.getTotal().toString(), true)
+            filaTotal("OP. GRAVADAS", boleta.getOpGravadas(), false),
+            filaTotal("OP. GRATUITA", cero, false),
+            filaTotal("OP. EXONERADO", cero, false),
+            filaTotal("OP. INAFECTO", cero, false),
+            filaTotal("TOTAL DESCUENTO", boleta.getTotalDescuento() != null ? boleta.getTotalDescuento() : cero, false),
+            filaTotal("I.G.V. (18%)", boleta.getIgv(), false),
+            filaTotal("TOTAL VENTA", boleta.getTotal(), true)
         );
-        der.setPrefWidth(306);
-        der.setAlignment(Pos.TOP_RIGHT);
+        der.setPrefWidth(320);
 
-        return new HBox(16, izq, der);
+        Region espacio = new Region();
+        HBox.setHgrow(espacio, Priority.ALWAYS);
+        return new HBox(14, izq, espacio, der);
     }
 
     private VBox seccionPie() {
-        Region franja = franjaPie();
         VBox pie = new VBox(4,
-            lbl("¡Gracias por tu compra en Coolbox!", F_GRACIAS, AZUL_NOCHE),
-            lbl("Representación impresa de la " + boleta.getTipoDocumento() + "  ·  Generado el " + boleta.getFechaEmision(), F_NORMAL, GRIS),
-            franja
+            lbl("Representación impresa de la " + capitalizar(boleta.getTipoDocumento()), F_BOLD, NEGRO),
+            lbl("Cambios y devoluciones: plazo de 7 días, productos nuevos y sin uso. Revisa las políticas y garantía en tienda.", F_NORMAL, GRIS),
+            lbl("Sistema Coolbox · Proyecto académico de POO - UPeU Juliaca", F_PEQUE, GRIS)
         );
         pie.setAlignment(Pos.CENTER);
         pie.setPadding(new Insets(10, 0, 0, 0));
@@ -200,30 +227,18 @@ public class ComprobanteView {
         return pie;
     }
 
-    // Franja fina de remolinos al final
-    private Region franjaPie() {
-        StackPane franja = new StackPane();
-        franja.setPrefSize(ANCHO, 14);
-        franja.setMaxSize(ANCHO, 14);
-        URL url = getClass().getResource("/img/vg-banner.png");
-        if (url != null) {
-            ImageView iv = new ImageView(new Image(url.toExternalForm()));
-            iv.setFitWidth(ANCHO);
-            iv.setFitHeight(14);
-            iv.setPreserveRatio(false);
-            franja.getChildren().add(iv);
-        } else {
-            franja.setStyle("-fx-background-color: #0F1F47;");
-        }
-        VBox.setMargin(franja, new Insets(8, 0, 0, 0));
-        return franja;
-    }
-
     // -- Componentes reutilizables --
 
+    private Region lineaPunteada() {
+        Region r = new Region();
+        r.setPrefHeight(1);
+        r.setBorder(new Border(new BorderStroke(LINEA, BorderStrokeStyle.DASHED, CornerRadii.EMPTY, new BorderWidths(1, 0, 0, 0))));
+        return r;
+    }
+
     private HBox tituloSeccion(String texto) {
-        Rectangle punto = new Rectangle(4, 14, DORADO);
-        HBox t = new HBox(6, punto, lbl(texto, F_SECCION, AZUL_NOCHE));
+        Rectangle barra = new Rectangle(4, 14, ROJO);
+        HBox t = new HBox(6, barra, lbl(texto, F_SECCION, NEGRO));
         t.setAlignment(Pos.CENTER_LEFT);
         return t;
     }
@@ -233,48 +248,71 @@ public class ComprobanteView {
         l.setFont(font);
         l.setTextFill(color);
         l.setWrapText(true);
-        l.setTextAlignment(TextAlignment.CENTER);
         return l;
     }
 
     private Label celda(String texto, Color color, Font font, double width, Pos pos) {
         Label l = lbl(texto, font, color);
         l.setPrefWidth(width);
+        l.setMinWidth(width);
         l.setAlignment(pos);
         return l;
     }
 
-    private void agregarFilaGrid(GridPane grid, int row, String etiqueta, String valor) {
-        Label lEtiqueta = lbl(etiqueta, F_BOLD, AZUL);
-        lEtiqueta.setPadding(new Insets(3, 8, 3, 8));
-        Label lValor = lbl(valor, F_NORMAL, NEGRO);
-        lValor.setTextAlignment(TextAlignment.LEFT);
-        lValor.setPadding(new Insets(3, 8, 3, 8));
-        grid.addRow(row, lEtiqueta, lValor);
+    private void agregarDato(GridPane grid, int fila, int col, String etiqueta, String valor) {
+        Label e = lbl(etiqueta, F_BOLD, NEGRO);
+        e.setPadding(new Insets(3, 8, 3, 8));
+        Label v = lbl(valor, F_NORMAL, NEGRO);
+        v.setPadding(new Insets(3, 8, 3, 8));
+        grid.add(e, col, fila);
+        grid.add(v, col + 1, fila);
     }
 
-    private HBox filaTotal(String etiqueta, String valor, boolean esTotal) {
-        Font f = esTotal ? F_DOC : F_BOLD;
-        Label lEtiq = lbl(etiqueta, f, esTotal ? DORADO : AZUL_NOCHE);
-        lEtiq.setPrefWidth(170);
+    private HBox filaTotal(String etiqueta, BigDecimal valor, boolean esTotal) {
+        Font f = esTotal ? F_TOTAL : F_BOLD;
+        Label lEtiq = lbl(etiqueta, f, esTotal ? Color.WHITE : NEGRO);
+        lEtiq.setPrefWidth(180);
         lEtiq.setAlignment(Pos.CENTER_LEFT);
-        lEtiq.setPadding(new Insets(5, 10, 5, 10));
-        Label lVal = lbl("S/ " + valor, f, esTotal ? Color.WHITE : NEGRO);
-        lVal.setPrefWidth(136);
+        lEtiq.setPadding(new Insets(4, 10, 4, 10));
+        Label lVal = lbl("S/ " + (valor != null ? valor.toString() : "0.00"), f, esTotal ? Color.WHITE : NEGRO);
+        lVal.setPrefWidth(140);
         lVal.setAlignment(Pos.CENTER_RIGHT);
-        lVal.setPadding(new Insets(5, 10, 5, 10));
+        lVal.setPadding(new Insets(4, 10, 4, 10));
 
         HBox fila = new HBox(lEtiq, lVal);
-        fila.setBackground(esTotal ? fondo(AZUL_NOCHE, 0, 0, 6, 6) : fondo(NIEBLA, 0, 0, 0, 0));
-        if (!esTotal) {
+        if (esTotal) {
+            fila.setBackground(fondo(ROJO, 0, 0, 6, 6));
+            fila.setPadding(new Insets(3, 0, 3, 0));
+        } else {
             fila.setBorder(new Border(new BorderStroke(LINEA, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 0, 1, 0))));
         }
         return fila;
     }
 
+    private long numeroArticulos() {
+        double total = 0;
+        for (ItemComprobante item : boleta.getItems()) {
+            total += item.getCantidad() == null ? 0 : item.getCantidad();
+        }
+        return Math.round(total);
+    }
+
     private String formatoCantidad(Double cantidad) {
         if (cantidad == null) return "";
         return cantidad == Math.floor(cantidad) ? String.valueOf(cantidad.longValue()) : String.valueOf(cantidad);
+    }
+
+    // "BOLETA DE VENTA ELECTRÓNICA" -> "Boleta de Venta Electrónica"
+    private String capitalizar(String texto) {
+        if (texto == null || texto.isBlank()) return "";
+        StringBuilder sb = new StringBuilder();
+        for (String palabra : texto.toLowerCase().split(" ")) {
+            if (palabra.isEmpty()) continue;
+            if (sb.length() > 0) sb.append(' ');
+            if (palabra.equals("de")) sb.append(palabra);
+            else sb.append(Character.toUpperCase(palabra.charAt(0))).append(palabra.substring(1));
+        }
+        return sb.toString();
     }
 
     // Fondo con esquinas: arriba-izq, arriba-der, abajo-der, abajo-izq

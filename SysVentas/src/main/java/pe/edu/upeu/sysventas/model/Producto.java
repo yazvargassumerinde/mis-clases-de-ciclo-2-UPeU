@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,7 @@ public class Producto {
 
     private Long idProducto;
     @NotBlank(message = "El nombre del producto es obligatorio")
+    @Size(max = 40, message = "El nombre del producto debe tener como máximo 40 caracteres")
     private String nombre;
 
     @NotNull(message = "Seleccione el tipo de producto")
