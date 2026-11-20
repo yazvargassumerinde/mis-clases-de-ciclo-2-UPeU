@@ -262,10 +262,12 @@ public class VentaController {
         columns.put("P.Unitario", new ColumnInfo("punitario", 100.0)); // Columna visible "Columna 2" mapea al campo "campo2"
         columns.put("P.Total", new ColumnInfo("ptotal", 100.0)); // Columna visible "Columna 2" mapea al campo "campo2"
 
-        Consumer<VentCarrito> updateAction = (VentCarrito ventCarrito) -> { System.out.println("Actualizar: " + ventCarrito); };
+        Consumer<VentCarrito> updateAction = this::editVenCarrito;
         Consumer<VentCarrito> deleteAction = (VentCarrito ventCarrito) -> {deleteReg(ventCarrito); };
 
         tableViewHelper.addColumnsInOrderWithSize(tableView, columns,updateAction, deleteAction );
+        TableViewHelper.formatoCarrito(tableView, List.of("P.Unitario", "P.Total"), List.of("ID Prod", "Cantidad"));
+        tableView.setPlaceholder(new Label("Elige un cliente y agrega productos al carrito"));
 
         tableView.setTableMenuButtonVisible(true);
     }
@@ -277,6 +279,7 @@ public class VentaController {
         for (VentCarrito dato: lista){
             impoTotal += Double.parseDouble(String.valueOf(dato.getPtotal()));
         }
+        impoTotal = Math.round(impoTotal * 100.0) / 100.0;
         txtImporteT.setText(String.valueOf(impoTotal));
         double pv = impoTotal / 1.18;
         txtBaseImp.setText(String.valueOf(Math.round(pv * 100.0) / 100.0));
@@ -284,8 +287,33 @@ public class VentaController {
         tableView.getItems().addAll(lista);
     }
 
+    /** MODIFICAR: cambia la cantidad de un producto del carrito (respetando el stock). */
     public void editVenCarrito(VentCarrito obj) {
-        System.out.println(obj.getDniruc());
+        Stage st = StageManager.getPrimaryStage();
+        Double stock = null;
+        try {
+            stock = ps.findById(obj.getIdProducto().getIdProducto()).getStock();
+        } catch (Exception ignored) { }
+        Optional<double[]> nuevo = EditarCarritoDialog.mostrar(
+                miContenedor.getScene() != null ? miContenedor.getScene().getWindow() : st,
+                "Modificar producto del carrito", obj.getNombreProducto(),
+                obj.getCantidad(), obj.getPunitario(), false, stock);
+        if (nuevo.isEmpty()) return;
+        try {
+            obj.setCantidad(nuevo.get()[0]);
+            obj.setPtotal(Math.round(nuevo.get()[0] * obj.getPunitario() * 100.0) / 100.0);
+            daoC.update(obj.getIdCarrito(), obj);
+            listar();
+            if (st != null) {
+                Toast.showToast(st, "Cantidad actualizada: " + obj.getNombreProducto(), 2000, st.getX() + st.getWidth() / 2 - 150, 80);
+            }
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Coolbox");
+            alert.setHeaderText("No se pudo modificar el producto");
+            alert.setContentText(e.getMessage() != null ? e.getMessage() : e.toString());
+            alert.showAndWait();
+        }
     }
 
     public void deleteReg(VentCarrito obj) {
@@ -293,7 +321,7 @@ public class VentaController {
         daoC.delete(obj.getIdCarrito());
         Stage stage = StageManager.getPrimaryStage();
         if (stage != null) {
-            Toast.showToast(stage, "Producto quitado del carrito", 2000, stage.getWidth() / 2, 80);
+            Toast.showToast(stage, "Producto quitado del carrito", 2000, stage.getX() + stage.getWidth() / 2 - 150, 80);
         }
         listar();
     }

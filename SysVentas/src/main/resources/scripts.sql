@@ -22,7 +22,7 @@ ALTER TABLE usuario ADD COLUMN IF NOT EXISTS id_proveedor INTEGER;
 ALTER TABLE usuario ADD CONSTRAINT IF NOT EXISTS proveedor_usuario_fk FOREIGN KEY (id_proveedor) REFERENCES proveedor (id_proveedor);
 
 -- 2. Perfiles y usuarios. Las claves estan encriptadas con SHA-256 (ver PasswordUtil):
---    admin -> admin123   |   yazminvs -> yaz123   |   pepe -> pepe12
+--    admin -> admin123   |   yazminvs -> yaz123   |   pepe -> pepe12   |   vendedor -> vend123   |   proveedor -> prov123
 MERGE INTO perfil (id_perfil, nombre, codigo) KEY (id_perfil) VALUES (1, 'Root', 'ROOT'), (2, 'Administrador', 'ADM'), (3, 'Reporte', 'REP'), (4, 'Proveedor', 'PRO');
 MERGE INTO usuario (id_usuario, usuario, clave, estado, id_perfil) KEY (id_usuario)
     VALUES (1, 'admin', 'JAvlGPq9JyTdtvBO6x2llnRI1+gxwIyPqCKAn3THIKk=', 'ACTIVO', 1),
@@ -89,6 +89,11 @@ INSERT INTO promocion (nombre, descripcion, porcentaje, fecha_inicio, fecha_fin,
 --    proveedor -> prov123  (perfil Proveedor: solo ve el CRUD de proveedores)
 INSERT INTO proveedor (dniruc, nombres_raso, tipo_doc, celular, email, direccion) SELECT '20456789012', 'Distribuidora Andina S.A.C.', 'RUC', '951234567', 'ventas@andina.pe', 'Av. Industrial 450 - Juliaca' WHERE NOT EXISTS (SELECT 1 FROM proveedor WHERE dniruc = '20456789012');
 INSERT INTO usuario (usuario, clave, estado, id_perfil, id_proveedor) SELECT 'proveedor', 'paJOiOD/fOaV+qtKFhkuxn5q7rEukyRA8AXBniX37sY=', 'ACTIVO', 4, (SELECT MIN(id_proveedor) FROM proveedor WHERE dniruc = '20456789012') WHERE NOT EXISTS (SELECT 1 FROM usuario WHERE usuario = 'proveedor');
+UPDATE usuario SET clave = 'paJOiOD/fOaV+qtKFhkuxn5q7rEukyRA8AXBniX37sY=', estado = 'ACTIVO', id_perfil = 4 WHERE usuario = 'proveedor';
+
+-- Cuenta del perfil Administrador (vende, compra y gestiona productos):  vendedor -> vend123
+INSERT INTO usuario (usuario, clave, estado, id_perfil) SELECT 'vendedor', 'fm4fe9Jylul9hJT8Ucs9GTVbJuBi58CaFj2VQhP0Grk=', 'ACTIVO', 2 WHERE NOT EXISTS (SELECT 1 FROM usuario WHERE usuario = 'vendedor');
+UPDATE usuario SET clave = 'fm4fe9Jylul9hJT8Ucs9GTVbJuBi58CaFj2VQhP0Grk=', estado = 'ACTIVO', id_perfil = 2 WHERE usuario = 'vendedor';
 
 -- ============================================================
 -- 9. Promociones de la tienda (vistas en la web de Coolbox, noviembre 2026)

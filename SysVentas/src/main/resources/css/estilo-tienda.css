@@ -798,3 +798,33 @@
 .check-box:selected .mark, .radio-button:selected .dot {
     -fx-background-color: #FFFFFF;
 }
+
+/* ---------- Botones Editar / Eliminar de las tablas ---------- */
+.table-view .button.btn-editar,
+.table-view .button.btn-eliminar {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-padding: 3 12 3 10;
+    -fx-graphic-text-gap: 5;
+    -fx-cursor: hand;
+}
+.table-view .button.btn-editar {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #1E66D0;
+    -fx-text-fill: #1E66D0;
+}
+.table-view .button.btn-editar:hover {
+    -fx-background-color: #1E66D0;
+    -fx-text-fill: #FFFFFF;
+}
+.table-view .button.btn-eliminar {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E30613;
+    -fx-text-fill: #E30613;
+}
+.table-view .button.btn-eliminar:hover {
+    -fx-background-color: #E30613;
+    -fx-text-fill: #FFFFFF;
+}

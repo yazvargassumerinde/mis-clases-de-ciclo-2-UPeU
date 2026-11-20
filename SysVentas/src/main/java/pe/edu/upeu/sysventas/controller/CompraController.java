@@ -6,6 +6,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import pe.edu.upeu.sysventas.components.AutoCompleteTextField;
 import pe.edu.upeu.sysventas.components.ColumnInfo;
+import pe.edu.upeu.sysventas.components.EditarCarritoDialog;
 import pe.edu.upeu.sysventas.components.TableViewHelper;
 import pe.edu.upeu.sysventas.components.Toast;
 import pe.edu.upeu.sysventas.dto.ModeloDataAutocomplet;
@@ -111,9 +112,11 @@ public class CompraController {
         columns.put("Cantidad", new ColumnInfo("cantidad", 80.0));
         columns.put("P.Compra", new ColumnInfo("punitario", 100.0));
         columns.put("P.Total", new ColumnInfo("ptotal", 100.0));
-        Consumer<CompCarrito> updateAction = c -> System.out.println("Actualizar: " + c);
+        Consumer<CompCarrito> updateAction = this::editarDelCarrito;
         Consumer<CompCarrito> deleteAction = this::eliminarDelCarrito;
         helper.addColumnsInOrderWithSize(tableView, columns, updateAction, deleteAction);
+        TableViewHelper.formatoCarrito(tableView, List.of("P.Compra", "P.Total"), List.of("ID Prod", "Cantidad"));
+        tableView.setPlaceholder(new Label("Elige un proveedor y agrega productos a la compra"));
         tableView.setTableMenuButtonVisible(true);
     }
 
@@ -173,6 +176,25 @@ public class CompraController {
             mensaje("", false);
         } catch (Exception e) {
             mensaje("No se pudo agregar: " + e.getMessage(), true);
+        }
+    }
+
+    /** MODIFICAR: cambia la cantidad y el precio de compra de un producto del carrito. */
+    public void editarDelCarrito(CompCarrito obj) {
+        Optional<double[]> nuevo = EditarCarritoDialog.mostrar(
+                miContenedor.getScene() != null ? miContenedor.getScene().getWindow() : null,
+                "Modificar producto de la compra", obj.getNombreProducto(),
+                obj.getCantidad(), obj.getPunitario(), true, null);
+        if (nuevo.isEmpty()) return;
+        try {
+            obj.setCantidad(nuevo.get()[0]);
+            obj.setPunitario(nuevo.get()[1]);
+            obj.setPtotal(Math.round(nuevo.get()[0] * nuevo.get()[1] * 100.0) / 100.0);
+            carS.update(obj.getIdCompcarrito(), obj);
+            listar();
+            mensaje("Producto modificado: " + obj.getNombreProducto(), false);
+        } catch (Exception e) {
+            mensaje("No se pudo modificar: " + e.getMessage(), true);
         }
     }
 

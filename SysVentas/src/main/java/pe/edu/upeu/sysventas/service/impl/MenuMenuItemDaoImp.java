@@ -34,6 +34,7 @@ public class MenuMenuItemDaoImp implements IMenuMenuItemDao {
             case "Administrador":
                 accesoReal.add(lista.get(1)); // miproducto
                 accesoReal.add(lista.get(2)); // micliente
+                accesoReal.add(lista.get(3)); // miventa (el administrador también vende)
                 accesoReal.add(lista.get(4)); // miproveedor
                 accesoReal.add(lista.get(5)); // micompra (Yoseth)
                 break;
@@ -41,13 +42,15 @@ public class MenuMenuItemDaoImp implements IMenuMenuItemDao {
                 accesoReal = lista;
                 break;
             case "Reporte":
+                accesoReal.add(lista.get(1)); // miproducto (consulta de productos y stock)
                 accesoReal.add(lista.get(2)); // micliente
                 break;
             case "Proveedor":
                 accesoReal.add(lista.get(4)); // miproveedor (CRUD de Yerson)
                 break;
             default:
-                throw new AssertionError();
+                // Perfil desconocido: solo ve la opción Salir (antes cerraba el programa con un error)
+                break;
         }
         return accesoReal;
 
